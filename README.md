@@ -11,6 +11,7 @@
 PATH=$(SolutionDir)SFML-2.5.1\bin;%PATH%
 ```
 5. All the other configurations should already be set and tracked in the repo, so you should be able to run the project in the local debugger and use all the SFML libraries dynamically.
+6. When running with the debugger, make sure the local debugger mode is set to Debug, and the archictecture is set to x86 (the two dropdowns to the left of the green start debugging button).
 
 ## Building for release
 TODO
