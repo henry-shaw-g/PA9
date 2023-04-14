@@ -71,7 +71,7 @@ bool TextureManager::loadTexture(const std::string& textureId, const std::string
 	if (!success) {
 		// remove the the texture from the table
 		cout << "warning: could not load texture from file, path: " << path << '\n';
-
+		delete texturePtr;
 	}
 	else {
 		_textures[textureId] = texturePtr;
