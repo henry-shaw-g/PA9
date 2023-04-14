@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClInclude Include="src\resources\TextureManager.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\smiley_face_0.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
