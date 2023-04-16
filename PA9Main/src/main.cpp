@@ -1,4 +1,10 @@
-#include <SFML/Window.hpp>
+
+#include <string>
+#include <sstream>
+#include <iomanip>
+
+#include "SFML/Window.hpp"
+#include "SFML/System.hpp"
 
 #include "resources/ResourceManager.h"
 
@@ -10,7 +16,9 @@ int main(void) {
 	// setup sf window
 	sf::RenderWindow window(sf::VideoMode(500, 500), "WINDOW");
 	sf::Event event;
-	
+	{
+		window.setFramerateLimit(120);
+	}
 	
 	// testing texture manager
 	sf::Sprite sprite;
@@ -22,10 +30,23 @@ int main(void) {
 	
 	// testing font manager
 	sf::Text textObj("what", gameResourceManager.getFontRef("freecam_font"), 10);
-	textObj.setOrigin(textObj.getGlobalBounds().width / 2.f, 0.f);
-	textObj.setPosition(500.f / 4 * 0.5f, 500.f / 4 * 0.8f);
-	textObj.setFillColor(sf::Color(255, 200, 150));
-	textObj.setOutlineThickness(0.f);
+	{
+		textObj.setOrigin(textObj.getGlobalBounds().width / 2.f, 0.f);
+		textObj.setPosition(500.f / 4 * 0.5f, 500.f / 4 * 0.8f);
+		textObj.setFillColor(sf::Color(255, 200, 150));
+		textObj.setOutlineThickness(0.f);
+	}
+
+	// test FPS display
+	sf::Text fpsTextObj("0.00 fps", gameResourceManager.getFontRef("freecam_font"), 8);
+	sf::Clock fpsClock;
+	std::stringstream fpsStrStream;
+	{
+		fpsTextObj.setPosition(5.f, 5.f);
+		fpsTextObj.setFillColor(sf::Color(255, 200, 150));
+		fpsTextObj.setOutlineThickness(0.f);
+		fpsClock.restart();
+	}
 
 	// update loop
 	while (window.isOpen()) {
@@ -36,12 +57,24 @@ int main(void) {
 		}
 		window.clear();
 
+		// update window size
 		sf::Vector2u size = window.getSize();
 		sf::FloatRect view(0.f, 0.f, size.x / 4, size.y / 4);
 		window.setView(sf::View(view));
 
+		// display fps
+		float dt = fpsClock.getElapsedTime().asSeconds();
+		float fps = 1 / dt;
+		fpsClock.restart();
+		fpsStrStream.str("");
+		fpsStrStream << std::fixed << std::setprecision(0) << fps;
+		fpsTextObj.setString(fpsStrStream.str());
+		
+		
+
 		window.draw(sprite);
 		window.draw(textObj);
+		window.draw(fpsTextObj);
 		window.display();
 	}
 }
