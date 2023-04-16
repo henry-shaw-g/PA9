@@ -4,6 +4,8 @@
 	desc:
 		- service that loads and keeps references to all textures
 		- for now, since the texture lifetimes need to last for the entire program, we are just using a singleton to hold the textures, and elsewhere they can be referenced
+	todo:
+		- add an index for slices of spritesheets
 	
 */
 #pragma once
