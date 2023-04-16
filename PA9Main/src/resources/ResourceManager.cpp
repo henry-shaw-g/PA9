@@ -46,7 +46,7 @@ ResourceManager& ResourceManager::service()
 {
 	if (!ResourceManager::isLoaded) {
 		// don't want any possible get attempts if we haven't loaded everything
-		throw logic_error("Tried to get ResourceManager service, not loaded.");
+		throw logic_error("Tried to get ResourceManager sfervice, not loaded.");
 	}
 	return ResourceManager::singleton;
 }
@@ -68,7 +68,7 @@ bool ResourceManager::doLoad() {
 	// load textures
 	loadTexture("smiley_face_0", "assets/smiley_face_0.png");
 	// load font(s?)
-
+	loadFont("freecam_font", "assets/fonts/freecam v2.ttf");
 	return true;
 }
 
