@@ -136,12 +136,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\math\Vec2f.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameConfig.h" />
     <ClInclude Include="src\gui\GuiContainer.h" />
     <ClInclude Include="src\gui\GuiView.h" />
+    <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
