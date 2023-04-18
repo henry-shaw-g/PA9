@@ -79,19 +79,18 @@ int main(void) {
 		fpsStrStream << std::fixed << std::setprecision(0) << fps;
 		fpsTextObj.setString(fpsStrStream.str());
 		
-		
-
-		/*window.draw(sprite);
-		window.draw(textObj);
 		window.draw(fpsTextObj);
-		window.display();*/
 
 		newPlayer.moveObject(window);
+		window.draw(newPlayer);
+		
 
-		while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+		/*while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 			window.clear();
 			window.draw(newPlayer);
 			window.display();
-		}
+		}*/
+
+		window.display(); // this should probably be called last
 	}
 }

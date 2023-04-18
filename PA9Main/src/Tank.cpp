@@ -3,32 +3,32 @@
 void Tank::moveObject(sf::RenderWindow& window) {
 
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		//window.clear();
+		window.clear();
 		move(.1 * cos(radians), .1 * sin(radians));
-		//window.draw(*this);
-		//window.display();
+		window.draw(*this);
+		window.display();
 	}
 
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		//window.clear();
+		window.clear();
 		move(-.1 * cos(radians), -.1 * sin(radians));
-		//window.draw(*this);
-		//window.display();
+		window.draw(*this);
+		window.display();
 	}
 
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		//window.clear();
+		window.clear();
 		rotate(maxAngV);
 		setRadians();
-		//window.draw(*this);
-		//window.display();
+		window.draw(*this);
+		window.display();
 	}
 
 	while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		//window.clear();
+		window.clear();
 		rotate(-maxAngV);
 		setRadians();
-		//window.draw(*this);
-		//window.display();
+		window.draw(*this);
+		window.display();
 	}
 }
