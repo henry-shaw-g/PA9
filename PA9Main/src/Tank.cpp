@@ -1,34 +1,24 @@
 #include "Tank.h"
 
 void Tank::moveObject(sf::RenderWindow& window) {
+	// note: do not call window clear or window display in individual rendering steps, those should only be called at the begining / end of the frame
+	// also we only need to check the key state one time each frame so these should be if statements rather than while loops
 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		window.clear();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		move(.1 * cos(radians), .1 * sin(radians));
-		window.draw(*this);
-		window.display();
 	}
 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		window.clear();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 		move(-.1 * cos(radians), -.1 * sin(radians));
-		window.draw(*this);
-		window.display();
 	}
 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		window.clear();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		rotate(maxAngV);
 		setRadians();
-		window.draw(*this);
-		window.display();
 	}
 
-	while (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		window.clear();
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		rotate(-maxAngV);
 		setRadians();
-		window.draw(*this);
-		window.display();
 	}
 }

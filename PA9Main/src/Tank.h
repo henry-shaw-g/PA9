@@ -3,8 +3,8 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "SFML/Graphics.hpp"
-#include "ResourceManager.h"
-#include "Body.h"
+#include "resources/ResourceManager.h"
+#include "kinematics/Body.h"
 
 class Tank : public Body, public sf::CircleShape{
 

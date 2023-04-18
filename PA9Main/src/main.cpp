@@ -8,7 +8,7 @@
 
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
-#include "resources/Tank.h"
+#include "Tank.h"
 
 #include "resources/ResourceManager.h"
 
