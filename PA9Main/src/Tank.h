@@ -2,11 +2,14 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+
 #include "SFML/Graphics.hpp"
+
+#include "math/Vec2.h"
 #include "resources/ResourceManager.h"
 #include "kinematics/Body.h"
 
-class Tank : public Body, public sf::CircleShape{
+class Tank : public Body, public sf::CircleShape {
 
 private:
 
@@ -14,20 +17,23 @@ private:
 	float maxAngV;
 	float radians;
 
+	sf::Sprite chassisSprite;
+	sf::Sprite turretSprite;
+
+	Vec2f getFrontDir() const;
+	Vec2f getRightDir() const;
+
 public:
 
-	Tank(float initX, float initY, float radius) : Body(initX, initY), CircleShape(radius) {
-		maxV = .1;
-		maxAngV = 5;
-		radians = 0;
-		this->setPosition(getCurrentPosition());
-		this->setOrigin(radius, radius);
-		
-	}
+	// ctor: initialize tank with position and collider radius
+	Tank(float initX, float initY, float radius);
+
+	// desc: render the tank
+	void draw(sf::RenderTarget& renderTarget, sf::RenderStates _) const override;
 
 	void setRadians() {
 		radians = (M_PI / 180) * getRotation();
 	}
 
-	void moveObject(sf::RenderWindow& window);
+	void moveObject();
 };

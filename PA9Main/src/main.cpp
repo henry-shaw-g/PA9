@@ -18,10 +18,12 @@ int main(void) {
 	ResourceManager& gameResourceManager = ResourceManager::service();
 
 	// setup sf window
-	sf::RenderWindow window(sf::VideoMode(500, 500), "WINDOW");
+	sf::RenderWindow window(sf::VideoMode(1440, 810), "WINDOW");
 	sf::Event event;
 	{
 		window.setFramerateLimit(120);
+		sf::FloatRect view(0.f, 0.f, 480, 270);
+		window.setView(sf::View(view));
 	}
 	
 	// testing texture manager
@@ -52,6 +54,12 @@ int main(void) {
 		fpsClock.restart();
 	}
 
+	// test some transform stuff
+	sf::Transform tf = sf::Transform::Identity;
+	{
+		const float* m = tf.getMatrix();
+	}
+
 	// update loop
 
 	Tank newPlayer(50, 100, 2.5);
@@ -64,33 +72,33 @@ int main(void) {
 				window.close();
 			}
 		}
-		window.clear();
-
-		// update window size
-		sf::Vector2u size = window.getSize();
-		sf::FloatRect view(0.f, 0.f, size.x / 4, size.y / 4);
-		window.setView(sf::View(view));
-
-		// display fps
-		float dt = fpsClock.getElapsedTime().asSeconds();
-		float fps = 1 / dt;
-		fpsClock.restart();
-		fpsStrStream.str("");
-		fpsStrStream << std::fixed << std::setprecision(0) << fps;
-		fpsTextObj.setString(fpsStrStream.str());
-		
-		window.draw(fpsTextObj);
-
-		newPlayer.moveObject(window);
-		window.draw(newPlayer);
 		
 
-		/*while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-			window.clear();
+		
+		// UPDATE LOGIC
+		{
+			// display fps
+			float dt = fpsClock.getElapsedTime().asSeconds();
+			float fps = 1 / dt;
+			fpsClock.restart();
+			fpsStrStream.str("");
+			fpsStrStream << std::fixed << std::setprecision(0) << fps;
+			fpsTextObj.setString(fpsStrStream.str());
+			// update tank
+			newPlayer.moveObject();
+		}
+		// RENDERING
+		{
+			window.clear(sf::Color::White);
+			// update window size
+			sf::Vector2u size = window.getSize();
+			// draw background layer?
+			// draw object layer
 			window.draw(newPlayer);
-			window.display();
-		}*/
-
-		window.display(); // this should probably be called last
+			// draw ui layer
+			window.draw(fpsTextObj);
+			// push pixel buffer to be drawn
+			window.display(); // this should probably be called last
+		}
 	}
 }
