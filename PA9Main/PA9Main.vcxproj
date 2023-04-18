@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\resources\Tank.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>

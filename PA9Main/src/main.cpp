@@ -1,10 +1,14 @@
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
+#include "resources/Tank.h"
 
 #include "resources/ResourceManager.h"
 
@@ -49,6 +53,11 @@ int main(void) {
 	}
 
 	// update loop
+
+	Tank newPlayer(50, 100, 2.5);
+	window.draw(newPlayer);
+	window.display();
+
 	while (window.isOpen()) {
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
@@ -72,9 +81,17 @@ int main(void) {
 		
 		
 
-		window.draw(sprite);
+		/*window.draw(sprite);
 		window.draw(textObj);
 		window.draw(fpsTextObj);
-		window.display();
+		window.display();*/
+
+		newPlayer.moveObject(window);
+
+		while (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+			window.clear();
+			window.draw(newPlayer);
+			window.display();
+		}
 	}
 }
