@@ -136,6 +136,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\resources\Tank.cpp" />
     <ClCompile Include="src\math\Vec2f.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\TestKinematics.cpp" />
