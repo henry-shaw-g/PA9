@@ -138,6 +138,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\Vec2f.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
+    <ClCompile Include="src\TestKinematics.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameConfig.h" />
@@ -145,6 +146,7 @@
     <ClInclude Include="src\gui\GuiView.h" />
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
+    <ClInclude Include="src\TestKinematics.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\smiley_face_0.png" />

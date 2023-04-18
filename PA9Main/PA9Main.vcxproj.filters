@@ -21,6 +21,12 @@
     <ClCompile Include="src\resources\ResourceManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\math\Vec2f.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TestKinematics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\gui\GuiView.h">
@@ -35,9 +41,18 @@
     <ClInclude Include="src\resources\ResourceManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\TestKinematics.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\math\Vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\smiley_face_0.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="assets\tank_sprites\tank_blue.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
