@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\smiley_face_0.png" />
+    <Image Include="assets\tank_sprites\tank_blue.png" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="assets\fonts\freecam v2.ttf" />
