@@ -6,7 +6,7 @@
 
 #include "../math/Vec2.h"
 
-typedef unsigned int;
+typedef unsigned int uint;
 
 class Body{
 
@@ -60,6 +60,4 @@ public:
 	void setIndex(uint nIndex) {
 		index = nIndex;
 	}
-
-	virtual void moveObject() = 0;
 };

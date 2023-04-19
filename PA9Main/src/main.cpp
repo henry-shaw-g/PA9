@@ -8,8 +8,10 @@
 
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
-#include "Tank.h"
 
+#include "kinematics/Body.h"
+#include "kinematics/BodySystem.h"
+#include "Tank.h"
 #include "resources/ResourceManager.h"
 
 int main(void) {
@@ -60,6 +62,17 @@ int main(void) {
 		const float* m = tf.getMatrix();
 	}
 
+	// test body system stuff
+	BodySystem testBodySystem;
+	Body pointBody(50, 50);
+	sf::CircleShape pointBodySprite;
+	{
+		testBodySystem.addBody(pointBody);
+		pointBody.setVelocity(Vec2f(5, 5)); // 5 unit pixels / sec idk
+		pointBodySprite.setRadius(20);
+		pointBodySprite.setFillColor(sf::Color::Cyan);
+	}
+
 	// update loop
 
 	Tank newPlayer(50, 100, 2.5);
@@ -86,6 +99,11 @@ int main(void) {
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
 			newPlayer.moveObject();
+
+			// update kinematics
+			testBodySystem.update(dt);	
+			pointBodySprite.setPosition(pointBody.getCurrentPosition());
+			std::cout << pointBody.getVelocity() << '\n';
 		}
 		// RENDERING
 		{
@@ -95,6 +113,7 @@ int main(void) {
 			// draw background layer?
 			// draw object layer
 			window.draw(newPlayer);
+			window.draw(pointBodySprite);
 			// draw ui layer
 			window.draw(fpsTextObj);
 			// push pixel buffer to be drawn

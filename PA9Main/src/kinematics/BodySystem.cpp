@@ -18,7 +18,7 @@ void BodySystem::update(float dt) {
 		Vec2f p0 = b.position;
 		Vec2f v = b.velocity;
 		Vec2f p1 = p0 + v * dt;
-		b.position;
+		b.position = p1;
 	}
 }
 
