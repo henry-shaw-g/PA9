@@ -3,6 +3,7 @@
 	desc: implements the utility 2d vector class
 */
 
+#include <iomanip>
 #include <cmath>
 
 #include "Vec2.h"
@@ -32,6 +33,11 @@ Vec2f& Vec2f::operator= (const sf::Vector2f& lhs) {
 	x = lhs.x;
 	y = lhs.y;
 	return *this;
+}
+
+std::ostream& operator << (std::ostream& lhs, const Vec2f& rhs) {
+	lhs << std::setprecision(4) << rhs.x << ", " << rhs.y;
+	return lhs;
 }
 
 float Vec2f::mag() const
