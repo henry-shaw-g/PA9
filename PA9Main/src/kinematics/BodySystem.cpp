@@ -16,10 +16,10 @@ void BodySystem::update(float dt) {
 	// integrate positions from velocity
 	for (int i = 0; i < dynamicBodies.size(); ++i) {
 		Body& b = *dynamicBodies[i];
-		Vec2f p0 = b.position;
+		Vec2f p0 = b.getPosition();
 		Vec2f v = b.velocity;
 		Vec2f p1 = p0 + v * dt;
-		b.position = p1;
+		b.setPosition(p1);
 	}
 
 	// detect and resolve dynamic-dynamic collisions O(n^2) approach
@@ -104,7 +104,7 @@ void BodySystem::debug_drawCollisions(sf::RenderTarget& renderTarget) {
 
 CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2) {
 	CollisionResult result;
-	Vec2f r = b2.position - b1.position;
+	Vec2f r = b2.getPosition() - b1.getPosition();
 	float d12 = b1.radius + b2.radius;
 	if (r.dot(r) < d12 * d12) {
 		result.collided = true;
@@ -112,7 +112,7 @@ CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const
 		float o = d12 - d; // intersection depth between circle surface
 		float m1 = b1.radius - o / 2; // distance from intersection midpoint and b1 surface
 		result.offset = r / d * o;
-		result.point = r / d * m1 + b1.position;
+		result.point = r / d * m1 + b1.getPosition();
 	}
 	else {
 		result.collided = false;

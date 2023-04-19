@@ -16,7 +16,7 @@ enum class BodyType {
 	AABB	= 1 << 1,
 };
 
-class Body {
+class Body : public sf::Transformable {
 
 private:
 	unsigned int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
@@ -24,12 +24,11 @@ private:
 public:
 
 	// moved these to public for ease of use
-	Vec2f position;
 	Vec2f velocity;
 
 	//Body object constructor
 	Body(Vec2f pos) :
-		position(pos), velocity(Vec2f::Zero)
+		velocity(Vec2f::Zero)
 	{
 		index = -1;
 	}
@@ -45,21 +44,6 @@ public:
 	//Get the current Velocity of the object
 	Vec2f getVelocity() { //might make virtual to make sure walls always return a value of 0
 		return velocity;
-	}
-
-	//Change the position of the object
-	void setCurrentPosition(float newX, float newY) {
-		position.x = newX;
-		position.y = newY;
-	}
-
-	void setCurrentPosition(Vec2f newPosition) {
-		position = newPosition;
-	}
-
-	//Get the current position of the object
-	Vec2f getCurrentPosition() {
-		return position;
 	}
 
 	// desc: get list index for body (internal to BodySystem)
@@ -80,7 +64,6 @@ public:
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineColor(sf::Color::Red);
 		circle.setOutlineThickness(2.f);
-		circle.setPosition(position);
-		rt.draw(circle);
+		rt.draw(circle, getTransform());
 	}
 };

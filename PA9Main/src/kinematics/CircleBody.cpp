@@ -12,6 +12,5 @@ void CircleBody::debug_draw(sf::RenderTarget& renderTarget) const {
 	circle.setOutlineThickness(2.f);
 	circle.setRadius(radius);
 	circle.setOrigin(radius, radius);
-	circle.setPosition(position);
-	renderTarget.draw(circle);
+	renderTarget.draw(circle, getTransform());
 }
