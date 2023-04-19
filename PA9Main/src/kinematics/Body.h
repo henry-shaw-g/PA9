@@ -1,27 +1,33 @@
+/*
+	file: Body.h
+	desc: high level body class
+*/
 #pragma once
+
+#include "../math/Vec2.h"
 
 class Body{
 
 private:
 
-	sf::Vector2f position;
-	double velocity;
+	Vec2f position;
+	Vec2f velocity;
 
 public:
 
 	//Body object constructor
 	Body(float xPos, float yPos) {
-		position = sf::Vector2f(xPos, yPos);
-		velocity = 0;
+		position = Vec2f(xPos, yPos);
+		velocity = Vec2f(0.f, 0.f);
 	}
 
 	//Change the value of the velocity
-	void setVelocity(double newVelocity) {
+	void setVelocity(Vec2f newVelocity) {
 		velocity = newVelocity;
 	}
 
 	//Get the current Velocity of the object
-	double getVelocity() { //might make virtual to make sure walls always return a value of 0
+	Vec2f getVelocity() { //might make virtual to make sure walls always return a value of 0
 		return velocity;
 	}
 
@@ -32,9 +38,9 @@ public:
 	}
 
 	//Get the current position of the object
-	sf::Vector2f getCurrentPosition() {
+	Vec2f getCurrentPosition() {
 		return position;
 	}
 
-	virtual void moveObject(sf::RenderWindow& window) = 0;
+	virtual void moveObject() = 0;
 };
