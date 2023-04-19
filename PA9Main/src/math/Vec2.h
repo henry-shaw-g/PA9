@@ -4,10 +4,14 @@
 */
 #pragma once
 
+#include <iostream>
+
 #include "SFML/System.hpp"
 
 class Vec2f : public sf::Vector2f {
 public:
+
+	const static Vec2f Zero;
 
 	// ctor: default
 	// desc: initailizes to zero vector
@@ -24,6 +28,10 @@ public:
 	// desc: necessary bcus = doesn't get inherited?
 	Vec2f& operator= (const Vec2f& lhs);
 	Vec2f& operator= (const sf::Vector2f& lhs);
+
+	// operator <<
+	// desc: print the vector
+	friend std::ostream& operator<< (std::ostream& lhs, const Vec2f& rhs);
 
 	// desc: get magnitude
 	float mag() const;
