@@ -10,6 +10,7 @@
 #include "SFML/System.hpp"
 
 #include "kinematics/Body.h"
+#include "kinematics/CircleBody.h"
 #include "kinematics/BodySystem.h"
 #include "Tank.h"
 #include "resources/ResourceManager.h"
@@ -64,13 +65,13 @@ int main(void) {
 
 	// test body system stuff
 	BodySystem testBodySystem;
-	Body pointBody(50, 50);
-	sf::CircleShape pointBodySprite;
+	CircleBody cb1(Vec2f(0, 50), 20); // note: the life times of these guys need to extend beyond the body class
+	CircleBody cb2(Vec2f(100, 50), 20);
 	{
-		testBodySystem.addBody(pointBody);
-		pointBody.setVelocity(Vec2f(5, 5)); // 5 unit pixels / sec idk
-		pointBodySprite.setRadius(20);
-		pointBodySprite.setFillColor(sf::Color::Cyan);
+		testBodySystem.addBody(cb1);
+		testBodySystem.addBody(cb2);
+		cb1.setVelocity(Vec2f(20, 10)); // 5 unit pixels / sec idk
+		cb2.setVelocity(Vec2f(-20, 10));
 	}
 
 	// update loop
@@ -80,14 +81,12 @@ int main(void) {
 	window.display();
 
 	while (window.isOpen()) {
+		// EVENTS & PROCESS PAUSING
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
 		}
-		
-
-		
 		// UPDATE LOGIC
 		{
 			// display fps
@@ -102,18 +101,16 @@ int main(void) {
 
 			// update kinematics
 			testBodySystem.update(dt);	
-			pointBodySprite.setPosition(pointBody.getCurrentPosition());
-			std::cout << pointBody.getVelocity() << '\n';
 		}
 		// RENDERING
 		{
 			window.clear(sf::Color::White);
-			// update window size
-			sf::Vector2u size = window.getSize();
 			// draw background layer?
 			// draw object layer
 			window.draw(newPlayer);
-			window.draw(pointBodySprite);
+			// draw debug layer
+			testBodySystem.debug_drawBodies(window);
+			testBodySystem.debug_drawCollisions(window);
 			// draw ui layer
 			window.draw(fpsTextObj);
 			// push pixel buffer to be drawn
