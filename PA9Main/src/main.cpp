@@ -75,14 +75,8 @@ int main(void) {
 	}
 
 	// update loop
-	sf::Sprite tank;
-	{
-		tank.setTexture(gameResourceManager.getTextureRef("Tank"));
-		/*tank.setOrigin(newPlayer.getCurrentPosition());
-		tank.setPosition(newPlayer.getCurrentPosition());*/
-	}
 
-	Tank newPlayer(50, 100, 10, tank);
+	Tank newPlayer(50, 100, 8);
 	window.draw(newPlayer);
 	window.display();
 
