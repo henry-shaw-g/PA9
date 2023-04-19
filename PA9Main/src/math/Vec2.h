@@ -11,6 +11,8 @@
 class Vec2f : public sf::Vector2f {
 public:
 
+	const static Vec2f Zero;
+
 	// ctor: default
 	// desc: initailizes to zero vector
 	Vec2f();
