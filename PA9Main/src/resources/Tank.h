@@ -13,15 +13,20 @@ private:
 	float maxV;
 	float maxAngV;
 	float radians;
+	sf::Sprite texture;
 
 public:
 
-	Tank(float initX, float initY, float radius) : Body(initX, initY), CircleShape(radius) {
+	Tank(float initX, float initY, float radius, sf::Sprite newTexture) : Body(initX, initY), CircleShape(radius) {
 		maxV = .1;
-		maxAngV = 5;
+		maxAngV = .1;
 		radians = 0;
+		texture = newTexture;
 		this->setPosition(getCurrentPosition());
 		this->setOrigin(radius, radius);
+		texture.setOrigin(radius, radius);
+		texture.setPosition(initX, initY);
+		texture.setRotation(90);
 		
 	}
 

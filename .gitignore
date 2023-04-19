@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Filters - removing some merge conflict sources (just use the file system for organization)
+*.vcxproj.filters
