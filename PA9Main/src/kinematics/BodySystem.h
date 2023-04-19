@@ -9,7 +9,11 @@
 
 #include <vector>
 
+#include "SFML/Graphics.hpp"
+
+#include "CollisionResult.h"
 #include "Body.h"
+#include "CircleBody.h"
 
 typedef unsigned int uint;
 
@@ -28,10 +32,19 @@ public:
 	// desc: removes the body from the list (the id needs to be maintained for this to work)
 	void removeBody(Body& body);
 
+	// desc: draw bodies as wireframes for debugging
+	void debug_drawBodies(sf::RenderTarget& renderTarget);
+
+	// desc: draw collisions for debugging
+	void debug_drawCollisions(sf::RenderTarget& renderTarget);
 private:
 	
+	// desc: get collision info for two circles colliding
+	// precond: b1 and b2 are unique
+	CollisionResult checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2);
+
 	bool invalidBodyIndex(uint index);
 
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
-
+	std::vector<CollisionResult> debug_collisions;
 };

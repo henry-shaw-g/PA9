@@ -10,6 +10,12 @@
 
 typedef unsigned int uint;
 
+enum class BodyType {
+	Point	= 0,
+	Circle	= 1 << 0,
+	AABB	= 1 << 1,
+};
+
 class Body {
 
 private:
@@ -66,8 +72,10 @@ public:
 		index = nIndex;
 	}
 
+	virtual BodyType getType() const { return BodyType::Point; }
+
 	virtual void debug_draw(sf::RenderTarget& rt) const {
-		sf::CircleShape circle(5.f, 8);
+		sf::CircleShape circle(3.f, 16);
 		circle.setOrigin(circle.getRadius(), circle.getRadius());
 		circle.setFillColor(sf::Color::Transparent);
 		circle.setOutlineColor(sf::Color::Red);
