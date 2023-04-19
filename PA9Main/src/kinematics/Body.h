@@ -6,19 +6,24 @@
 
 #include "../math/Vec2.h"
 
+typedef unsigned int;
+
 class Body{
 
 private:
-
-	Vec2f position;
-	Vec2f velocity;
+	unsigned int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
 
 public:
+
+	// moved these to public for ease of use
+	Vec2f position;
+	Vec2f velocity;
 
 	//Body object constructor
 	Body(float xPos, float yPos) {
 		position = Vec2f(xPos, yPos);
 		velocity = Vec2f(0.f, 0.f);
+		index = -1;
 	}
 
 	//Change the value of the velocity
@@ -37,9 +42,23 @@ public:
 		position.y = newY;
 	}
 
+	void setCurrentPosition(Vec2f newPosition) {
+		position = newPosition;
+	}
+
 	//Get the current position of the object
 	Vec2f getCurrentPosition() {
 		return position;
+	}
+
+	// desc: get list index for body (internal to BodySystem)
+	uint getIndex() {
+		return index;
+	}
+	
+	// desc: set list index for body (internal to BodySystem)
+	void setIndex(uint nIndex) {
+		index = nIndex;
 	}
 
 	virtual void moveObject() = 0;
