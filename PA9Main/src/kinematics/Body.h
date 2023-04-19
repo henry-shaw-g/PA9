@@ -4,11 +4,13 @@
 */
 #pragma once
 
+#include "SFML/Graphics.hpp"
+
 #include "../math/Vec2.h"
 
 typedef unsigned int uint;
 
-class Body{
+class Body {
 
 private:
 	unsigned int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
@@ -20,11 +22,14 @@ public:
 	Vec2f velocity;
 
 	//Body object constructor
-	Body(float xPos, float yPos) {
-		position = Vec2f(xPos, yPos);
-		velocity = Vec2f(0.f, 0.f);
+	Body(Vec2f pos) :
+		position(pos), velocity(Vec2f::Zero)
+	{
 		index = -1;
 	}
+
+	Body(float xPos, float yPos) :
+		Body(Vec2f(xPos, yPos)) {}
 
 	//Change the value of the velocity
 	void setVelocity(Vec2f newVelocity) {
@@ -55,9 +60,19 @@ public:
 	uint getIndex() {
 		return index;
 	}
-	
+
 	// desc: set list index for body (internal to BodySystem)
 	void setIndex(uint nIndex) {
 		index = nIndex;
+	}
+
+	virtual void debug_draw(sf::RenderTarget& rt) const {
+		sf::CircleShape circle(5.f, 8);
+		circle.setOrigin(circle.getRadius(), circle.getRadius());
+		circle.setFillColor(sf::Color::Transparent);
+		circle.setOutlineColor(sf::Color::Red);
+		circle.setOutlineThickness(2.f);
+		circle.setPosition(position);
+		rt.draw(circle);
 	}
 };
