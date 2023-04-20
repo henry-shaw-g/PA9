@@ -4,6 +4,7 @@ Tank::Tank(float initX, float initY, float radius) : CircleBody(Vec2f(initX, ini
 	maxV = 0.5;
 	maxAngV = 1; // this can stay here
 	radians = 0;
+	setPosition(initX, initY);
 
 	// setup chassis sprite
 	const sf::Texture& tankTextureRef = ResourceManager::service()
