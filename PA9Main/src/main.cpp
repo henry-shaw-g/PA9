@@ -102,13 +102,4 @@ int main(void) {
 			window.display(); // this should probably be called last
 		}
 	}
-
-
-
-	// possible tilesystem creation loop
-	sf::Vector2f pos (0, 0);
-	sf::Vector2f size(32, 18);
-	Tile A1(size, pos, sf::Color::Cyan);
-
-
 }
