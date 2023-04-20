@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -140,6 +140,7 @@
     <ClCompile Include="src\math\Vec2f.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\TestKinematics.cpp" />
+    <ClCompile Include="src\Walls.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameConfig.h" />
@@ -150,6 +151,8 @@
     <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\Tank.h" />
     <ClInclude Include="src\TestKinematics.h" />
+    <ClInclude Include="src\Tilesystem.h" />
+    <ClInclude Include="src\walls.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\smiley_face_0.png" />
