@@ -7,9 +7,9 @@
 
 #include "math/Vec2.h"
 #include "resources/ResourceManager.h"
-#include "kinematics/Body.h"
+#include "kinematics/CircleBody.h"
 
-class Tank : public Body, public sf::CircleShape {
+class Tank : public CircleBody, public sf::Drawable {
 
 private:
 

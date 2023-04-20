@@ -135,9 +135,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\kinematics\BodySystem.cpp" />
+    <ClCompile Include="src\kinematics\CircleBody.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Tank.cpp" />
-    <ClCompile Include="src\math\Vec2f.cpp" />
+    <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
     <ClCompile Include="src\TestKinematics.cpp" />
     <ClCompile Include="src\Walls.cpp" />
@@ -146,6 +148,11 @@
     <ClInclude Include="src\GameConfig.h" />
     <ClInclude Include="src\gui\GuiContainer.h" />
     <ClInclude Include="src\gui\GuiView.h" />
+    <ClInclude Include="src\kinematics\AxisBoxBody.h" />
+    <ClInclude Include="src\kinematics\CircleBody.h" />
+    <ClInclude Include="src\kinematics\BodySystem.h" />
+    <ClInclude Include="src\kinematics\Body.h" />
+    <ClInclude Include="src\kinematics\CollisionResult.h" />
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\Body.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />

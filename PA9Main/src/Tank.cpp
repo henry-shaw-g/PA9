@@ -1,11 +1,10 @@
 #include "Tank.h"
 
-Tank::Tank(float initX, float initY, float radius) : Body(initX, initY), CircleShape(radius) {
+Tank::Tank(float initX, float initY, float radius) : CircleBody(Vec2f(initX, initY), radius) {
 	maxV = 0.5;
 	maxAngV = 1; // this can stay here
 	radians = 0;
-	this->setPosition(getCurrentPosition()); // todo: move all this to kinematics
-	this->setOrigin(radius, radius);
+	setPosition(initX, initY);
 
 	// setup chassis sprite
 	const sf::Texture& tankTextureRef = ResourceManager::service()
@@ -13,13 +12,13 @@ Tank::Tank(float initX, float initY, float radius) : Body(initX, initY), CircleS
 	chassisSprite.setTexture(tankTextureRef);
 	chassisSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	// this will all be relative to the tank position / rotation after we do some stuff
-	chassisSprite.setOrigin(16.f, 16.f);
+	chassisSprite.setOrigin(radius, radius);
 	chassisSprite.setRotation(0.f);
 
 	// setup turret sprite
 	turretSprite.setTexture(tankTextureRef);
 	turretSprite.setTextureRect(sf::IntRect(32, 0, 64, 32));
-	turretSprite.setOrigin(16.f, 16.f);
+	turretSprite.setOrigin(radius, radius);
 	turretSprite.setRotation(0.f);
 }
 

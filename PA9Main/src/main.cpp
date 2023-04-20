@@ -8,8 +8,11 @@
 
 #include "SFML/Window.hpp"
 #include "SFML/System.hpp"
-#include "Tank.h"
 
+#include "kinematics/Body.h"
+#include "kinematics/CircleBody.h"
+#include "kinematics/BodySystem.h"
+#include "Tank.h"
 #include "resources/ResourceManager.h"
 #include "Tilesystem.h"
 
@@ -61,21 +64,29 @@ int main(void) {
 		const float* m = tf.getMatrix();
 	}
 
+	// test body system stuff
+	BodySystem testBodySystem;
+	CircleBody cb1(Vec2f(0, 50), 20); // note: the life times of these guys need to extend beyond the body class
+	CircleBody cb2(Vec2f(100, 50), 20);
+	{
+		testBodySystem.addBody(cb1);
+		testBodySystem.addBody(cb2);
+		cb1.setVelocity(Vec2f(20, 10)); // 5 unit pixels / sec idk
+		cb2.setVelocity(Vec2f(-20, 10));
+	}
+
 	// update loop
 
-	Tank newPlayer(50, 100, 2.5);
-	window.draw(newPlayer);
-	window.display();
+	Tank newPlayer(50, 100, 16);
+	testBodySystem.addBody(newPlayer);
 
 	while (window.isOpen()) {
+		// EVENTS & PROCESS PAUSING
 		while (window.pollEvent(event)) {
 			if (event.type == sf::Event::Closed) {
 				window.close();
 			}
 		}
-		
-
-		
 		// UPDATE LOGIC
 		{
 			// display fps
@@ -87,15 +98,19 @@ int main(void) {
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
 			newPlayer.moveObject();
+
+			// update kinematics
+			testBodySystem.update(dt);	
 		}
 		// RENDERING
 		{
 			window.clear(sf::Color::White);
-			// update window size
-			sf::Vector2u size = window.getSize();
 			// draw background layer?
 			// draw object layer
 			window.draw(newPlayer);
+			// draw debug layer
+			testBodySystem.debug_drawBodies(window);
+			testBodySystem.debug_drawCollisions(window);
 			// draw ui layer
 			window.draw(fpsTextObj);
 			// push pixel buffer to be drawn
