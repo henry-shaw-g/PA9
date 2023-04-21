@@ -16,7 +16,7 @@ public:
 
 	void debug_draw(sf::RenderTarget& renderTarget) {
 		sf::CircleShape circle(3.0f, 8);
-		circle.setFillColor(sf::Color::Yellow);
+		circle.setFillColor(sf::Color::Green);
 		circle.setOrigin(circle.getRadius(), circle.getRadius());
 		circle.setPosition(point);
 		renderTarget.draw(circle);
