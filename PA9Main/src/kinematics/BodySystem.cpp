@@ -14,38 +14,46 @@ void BodySystem::update(float dt) {
 	debug_collisions.clear();
 
 	// integrate positions from velocity
-	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		Body& b = *dynamicBodies[i];
-		Vec2f p0 = b.getPosition();
-		Vec2f v = b.velocity;
-		Vec2f p1 = p0 + v * dt;
-		b.setPosition(p1);
+	{
+		for (int i = 0; i < dynamicBodies.size(); ++i) {
+			Body& b = *dynamicBodies[i];
+			Vec2f p0 = b.getPosition();
+			Vec2f v = b.velocity;
+			Vec2f p1 = p0 + v * dt;
+			b.setPosition(p1);
+		}
 	}
 
 	// detect and resolve dynamic-dynamic collisions O(n^2) approach
-	CollisionResult result;
-	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		Body& b1 = *dynamicBodies[i];
-		BodyType type1 = b1.getType();
-		if (type1 == BodyType::Point)
-			continue;
-
-		result.collided = false;
-		for (int j = 0; j < dynamicBodies.size(); ++j) {
-			if (j == i) // don't do check on current
-				continue;
-			Body& b2 = *dynamicBodies[j];
-			BodyType type2 = b1.getType();
-			if (type2 == BodyType::Point)
+	{
+		CollisionResult result;
+		for (int i = 0; i < dynamicBodies.size(); ++i) {
+			Body& b1 = *dynamicBodies[i];
+			BodyType type1 = b1.getType();
+			if (type1 == BodyType::Point)
 				continue;
 
-			uint typeMask = (uint)type1 | (uint)type2;
-			if (typeMask == (uint)BodyType::Circle) {
-				result = checkCircleCircleCollide(static_cast<CircleBody&>(b1), static_cast<CircleBody&>(b2));
-			}
+			result.collided = false;
+			for (int j = 0; j < dynamicBodies.size(); ++j) {
+				if (j == i) // don't do check on current
+					continue;
+				Body& b2 = *dynamicBodies[j];
+				BodyType type2 = b1.getType();
+				if (type2 == BodyType::Point)
+					continue;
 
-			if (result.collided) {
-				debug_collisions.push_back(result);
+				uint typeMask = (uint)type1 | (uint)type2;
+				if (typeMask == (uint)BodyType::Circle) {
+					CircleBody& c1 = static_cast<CircleBody&>(b1), & c2 = static_cast<CircleBody&>(b2);
+					result = checkCircleCircleCollide(c1, c2);
+					if (result.collided) {
+						resolveCircleCircleCollide(c1, c2, result);
+					}
+				}
+
+				if (result.collided) {
+					debug_collisions.push_back(result);
+				}
 			}
 		}
 	}
@@ -119,4 +127,13 @@ CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const
 	}
 
 	return result;
+}
+
+void BodySystem::resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, CollisionResult collision) {
+	// push the first circle away from the the collision
+	Vec2f b1Pos = b1.getPosition();
+	b1.setPosition(b1Pos - collision.offset * 0.5f);
+	// push the second circle away from the collison
+	Vec2f b2Pos = b2.getPosition();
+	b2.setPosition(b2Pos +  collision.offset * 0.5f);
 }

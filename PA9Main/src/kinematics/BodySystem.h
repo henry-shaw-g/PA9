@@ -43,6 +43,10 @@ private:
 	// precond: b1 and b2 are unique
 	CollisionResult checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2);
 
+	// desc: resolve the collision for two circles by setting positions
+	//	- treats both circles as dynamic (both get moved)
+	void resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, CollisionResult collision);
+
 	bool invalidBodyIndex(uint index);
 
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
