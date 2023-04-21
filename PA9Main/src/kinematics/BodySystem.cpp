@@ -3,6 +3,8 @@
 	desc: implements the BodySystem class
 */
 
+#include <cmath>
+
 #include "BodySystem.h"
 
 static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
@@ -61,6 +63,26 @@ void BodySystem::update(float dt) {
 	}
 
 	// detect and resolve dynamic-static(tiles) collisions
+	{
+		CollisionResult result;
+		for (int i = 0; i < dynamicBodies.size(); ++i) {
+			// TEMP: check against the tiles
+			Body& b1 = *dynamicBodies[i];
+			AxisBoxBody& tileBody = testBox;
+
+			if (b1.getType() == BodyType::Circle) {
+				CircleBody& c1 = static_cast<CircleBody&>(b1);
+				result = checkCircleAxisBoxCollide(c1, tileBody);
+				if (result.collided) {
+					resolveCircleAxisBoxCollide(c1, tileBody, result);
+				}
+			}
+
+			if (result.collided) {
+				debug_collisions.push_back(result);
+			}
+		}
+	}
 }
 
 void BodySystem::addBody(Body& body)
@@ -99,6 +121,9 @@ void BodySystem::debug_drawBodies(sf::RenderTarget& renderTarget) {
 		Body& b = *dynamicBodies[i];
 		b.debug_draw(renderTarget);
 	}
+
+	// TEMP
+	testBox.debug_draw(renderTarget);
 }
 
 void BodySystem::debug_drawCollisions(sf::RenderTarget& renderTarget) {
@@ -138,4 +163,37 @@ void BodySystem::resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, Coll
 	// push the second circle away from the collison
 	Vec2f b2Pos = b2.getPosition();
 	b2.setPosition(b2Pos +  collision.offset * 0.5f);
+}
+
+CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2) {
+	CollisionResult result;
+
+	float abW = b2.getWidth();
+	float abH = b2.getHeight();
+	float cR = b1.radius;
+
+	Vec2f r0 = b1.getPosition() - b2.getPosition();
+	Vec2f close = Vec2f(
+		std::fmin(std::fmax(r0.x, -abW * 0.5f), abW * 0.5f),
+		std::fmin(std::fmax(r0.y, -abH * 0.5f), abH * 0.5f)
+	);
+	Vec2f r1 = close - r0;
+
+	if (r1.dot(r1) < cR * cR) {
+		result.collided = true;
+		float d = r1.mag();
+		float o = cR - d;
+		result.offset = r1 / d * o;
+		result.point = close + b2.getPosition();
+	}
+	else {
+		result.collided = false;
+	}
+
+	return result;
+}
+
+void BodySystem::resolveCircleAxisBoxCollide(CircleBody& b1, AxisBoxBody& _, CollisionResult collision) {
+	Vec2f b1Pos = b1.getPosition();
+	b1.setPosition(b1Pos - collision.offset);
 }

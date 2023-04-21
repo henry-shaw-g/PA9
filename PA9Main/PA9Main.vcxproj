@@ -135,6 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\kinematics\AxisBoxBody.cpp" />
     <ClCompile Include="src\kinematics\BodySystem.cpp" />
     <ClCompile Include="src\kinematics\CircleBody.cpp" />
     <ClCompile Include="src\main.cpp" />

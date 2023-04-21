@@ -14,6 +14,7 @@
 #include "CollisionResult.h"
 #include "Body.h"
 #include "CircleBody.h"
+#include "AxisBoxBody.h"
 
 typedef unsigned int uint;
 
@@ -47,8 +48,16 @@ private:
 	//	- treats both circles as dynamic (both get moved)
 	void resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, CollisionResult collision);
 
+	// desc: get collision for a circle and a tile box colliding
+	CollisionResult checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2);
+
+	// desc: resolve collision for circle and static tile box collision
+	void resolveCircleAxisBoxCollide(CircleBody& b1, AxisBoxBody& _, CollisionResult collision);
+
 	bool invalidBodyIndex(uint index);
 
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;
+	// TEMP
+	AxisBoxBody testBox = AxisBoxBody::fromTile(3, 3, 50, 50);
 };
