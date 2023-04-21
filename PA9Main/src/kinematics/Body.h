@@ -30,6 +30,7 @@ public:
 	Body(Vec2f pos) :
 		velocity(Vec2f::Zero)
 	{
+		setPosition(pos);
 		index = -1;
 	}
 
