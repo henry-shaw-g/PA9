@@ -5,6 +5,8 @@
 
 #include "BodySystem.h"
 
+static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
+
 // BODY SYSTEM IMPL
 
 BodySystem::BodySystem() {}
@@ -119,7 +121,7 @@ CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const
 		float d = r.mag();
 		float o = d12 - d; // intersection depth between circle surface
 		float m1 = b1.radius - o / 2; // distance from intersection midpoint and b1 surface
-		result.offset = r / d * o;
+		result.offset = r / d * (o + PUSHBACK_EPSILON);
 		result.point = r / d * m1 + b1.getPosition();
 	}
 	else {
