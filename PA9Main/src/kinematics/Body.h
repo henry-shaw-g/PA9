@@ -37,6 +37,10 @@ public:
 	Body(float xPos, float yPos) :
 		Body(Vec2f(xPos, yPos)) {}
 
+	void resolveCollision(Vec2f offset) {
+		setPosition(getPosition() - offset);
+	}
+
 	//Change the value of the velocity
 	void setVelocity(Vec2f newVelocity) {
 		velocity = newVelocity;

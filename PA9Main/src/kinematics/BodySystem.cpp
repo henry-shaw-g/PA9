@@ -50,12 +50,13 @@ void BodySystem::update(float dt) {
 				if (typeMask == (uint)BodyType::Circle) {
 					CircleBody& c1 = static_cast<CircleBody&>(b1), & c2 = static_cast<CircleBody&>(b2);
 					result = checkCircleCircleCollide(c1, c2);
-					if (result.collided) {
-						resolveCircleCircleCollide(c1, c2, result);
-					}
 				}
 
 				if (result.collided) {
+					// for 2 dynamic objects, both get moved
+					b1.resolveCollision(result.offset * 0.5f);
+					b2.resolveCollision(-result.offset * 0.5f);
+					// record collision for debugging (maybe other purposes?)
 					debug_collisions.push_back(result);
 				}
 			}
@@ -73,12 +74,13 @@ void BodySystem::update(float dt) {
 			if (b1.getType() == BodyType::Circle) {
 				CircleBody& c1 = static_cast<CircleBody&>(b1);
 				result = checkCircleAxisBoxCollide(c1, tileBody);
-				if (result.collided) {
+				/*if (result.collided) {
 					resolveCircleAxisBoxCollide(c1, tileBody, result);
-				}
+				}*/
 			}
 
 			if (result.collided) {
+				b1.resolveCollision(result.offset);
 				debug_collisions.push_back(result);
 			}
 		}
@@ -156,15 +158,6 @@ CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const
 	return result;
 }
 
-void BodySystem::resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, CollisionResult collision) {
-	// push the first circle away from the the collision
-	Vec2f b1Pos = b1.getPosition();
-	b1.setPosition(b1Pos - collision.offset * 0.5f);
-	// push the second circle away from the collison
-	Vec2f b2Pos = b2.getPosition();
-	b2.setPosition(b2Pos +  collision.offset * 0.5f);
-}
-
 CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2) {
 	CollisionResult result;
 
@@ -191,9 +184,4 @@ CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, cons
 	}
 
 	return result;
-}
-
-void BodySystem::resolveCircleAxisBoxCollide(CircleBody& b1, AxisBoxBody& _, CollisionResult collision) {
-	Vec2f b1Pos = b1.getPosition();
-	b1.setPosition(b1Pos - collision.offset);
 }

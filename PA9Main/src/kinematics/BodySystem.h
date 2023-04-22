@@ -44,15 +44,8 @@ private:
 	// precond: b1 and b2 are unique
 	CollisionResult checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2);
 
-	// desc: resolve the collision for two circles by setting positions
-	//	- treats both circles as dynamic (both get moved)
-	void resolveCircleCircleCollide(CircleBody& b1, CircleBody& b2, CollisionResult collision);
-
 	// desc: get collision for a circle and a tile box colliding
 	CollisionResult checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2);
-
-	// desc: resolve collision for circle and static tile box collision
-	void resolveCircleAxisBoxCollide(CircleBody& b1, AxisBoxBody& _, CollisionResult collision);
 
 	bool invalidBodyIndex(uint index);
 
