@@ -7,9 +7,34 @@
 
 #include "BodySystem.h"
 
+static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
 static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
 
-// BODY SYSTEM IMPL
+/* UTILITY */
+
+// returns -1 if no solution
+
+// fuzzy equality check for float against 0
+inline bool fequal (float n) {
+	return n * n < FCOMPARE_EPSILON;
+}
+
+// fuzzy equality check for floats a & b
+inline bool fequal(float a, float b) {
+	return (a - b) * (a - b) < FCOMPARE_EPSILON;
+}
+
+inline static float solveAlignedIntersect(float xt, float dx) {
+	if (fequal(dx)) {
+		// since we are checking against segment, only care about ranges from 0 to 1
+		return 2.f; 
+	}
+	else {
+		return xt / dx;
+	}
+}
+
+/* BODY SYSTEM */
 
 BodySystem::BodySystem() {}
 
@@ -113,6 +138,16 @@ void BodySystem::removeBody(Body& body)
 	body.setIndex(-1);
 }
 
+LineCastResult BodySystem::lineCast(Vec2f p0, Vec2f p1) {
+	LineCastResult result;
+
+	result = checkAxisBoxLineCast(testBox, p0, p1);
+	debug_lineCasts.push_back(result);
+	
+
+	return result;
+}
+
 bool BodySystem::invalidBodyIndex(uint index) {
 	return index == -1;
 	// todo: possible bounds checking
@@ -136,7 +171,16 @@ void BodySystem::debug_drawCollisions(sf::RenderTarget& renderTarget) {
 		result.debug_draw(renderTarget);
 	}
 	// jic:
-	debug_collisions.clear();
+	//debug_collisions.clear();
+}
+
+void BodySystem::debug_drawLineCasts(sf::RenderTarget& renderTarget) {
+	LineCastResult result;
+	while (!debug_lineCasts.empty()) {
+		result = debug_lineCasts.back();
+		debug_lineCasts.pop_back();
+		result.debug_draw(renderTarget);
+	}
 }
 
 CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2) {
@@ -181,6 +225,70 @@ CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, cons
 	}
 	else {
 		result.collided = false;
+	}
+
+	return result;
+}
+
+LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vec2f p0, Vec2f p1) const {
+	// do a bunch of projections to find nearest point on line to circle
+	Vec2f u = p1 - p0;
+	Vec2f v = body.getPosition() - p0;
+	Vec2f w = v * (v.dot(u) / u.dot(u));
+	Vec2f o = u - w;
+
+	LineCastResult result;
+	// check radius and get intersection point
+	if (o.dot(o) < body.radius * body.radius) {
+		result.intersection = true;
+		float d = sqrt(body.radius * body.radius + o.dot(o));
+		result.point = w - d * u.norm();
+		result.normal = result.point - body.getPosition();
+	}
+	{
+		result.intersection = false;
+	}
+	return result;
+}
+
+static float lineCast_solveAxisBoxSide(float r1, float r2, float s1, float a, float b) {
+	if (fequal(r1)) {
+		return -1.f;
+	}
+	
+	float t = s1 / r1;
+	float s2 = t * r2;
+	return (a < s2 && s2 < b) ? t : -1.f;
+}
+
+LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vec2f p0, Vec2f p1) const {
+	// parameter which we will solve for against every plane of the axis box
+	float tmin = 2.f; // the maximum value we care about is 1 so this is fine
+	float t;
+	Vec2f r = p1 - p0;
+	float left = body.getLeft() - p0.x, top = body.getTop() - p0.y, 
+		right = body.getRight() - p0.x, bottom = body.getBottom() - p0.y;
+
+	t = lineCast_solveAxisBoxSide(r.x, r.y, left, top, bottom);
+	tmin = (t > 0.f && t < tmin) ? t : tmin;
+	t = lineCast_solveAxisBoxSide(r.x, r.y, right, top, bottom);
+	tmin = (t > 0.f && t < tmin) ? t : tmin;
+	t = lineCast_solveAxisBoxSide(r.y, r.x, top, left, right);
+	tmin = (t > 0.f && t < tmin) ? t : tmin;
+	t = lineCast_solveAxisBoxSide(r.y, r.x, bottom, left, right);
+	tmin = (t > 0.f && t < tmin) ? t : tmin;
+
+	LineCastResult result;
+	result.p0 = p0, result.p1 = p1;
+
+	if (tmin > 0.f && tmin < 1.f) {
+		result.intersection = true;
+		result.point = p0 + r * tmin;
+		result.t = tmin;
+		// todo: find least dumb way to get normal (could do it w/ branch hell, but nah)
+	}
+	else {
+		result.intersection = false;
 	}
 
 	return result;
