@@ -21,12 +21,10 @@ public:
 	Vec2f(float x, float y);
 	
 	// ctor: copy
-	Vec2f(const Vec2f& copy);
 	Vec2f(const sf::Vector2f& copy);
 	
 	// operator: = 
 	// desc: necessary bcus = doesn't get inherited?
-	Vec2f& operator= (const Vec2f& lhs);
 	Vec2f& operator= (const sf::Vector2f& lhs);
 
 	// operator <<
