@@ -66,13 +66,13 @@ int main(void) {
 
 	// test body system stuff
 	BodySystem testBodySystem;
-	CircleBody cb1(Vec2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
-	CircleBody cb2(Vec2f(300, 100), 20);
+	CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
+	CircleBody cb2(Vector2f(300, 100), 20);
 	{
 		testBodySystem.addBody(cb1);
 		testBodySystem.addBody(cb2);
-		cb1.setVelocity(Vec2f(0, 0)); // 5 unit pixels / sec idk
-		cb2.setVelocity(Vec2f(0, 0));
+		cb1.setVelocity(Vector2f(0, 0)); // 5 unit pixels / sec idk
+		cb2.setVelocity(Vector2f(0, 0));
 	}
 
 	// update loop
