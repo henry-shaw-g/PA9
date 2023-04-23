@@ -39,7 +39,7 @@ float AxisBoxBody::getRight() const {
 	return left + width;
 }
 
-Vec2f AxisBoxBody::getPosition() const {
+Vector2f AxisBoxBody::getPosition() const {
 	return Vec2f(left + width * 0.5f, top + height * 0.5f);
 }
 

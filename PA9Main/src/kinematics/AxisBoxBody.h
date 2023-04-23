@@ -39,7 +39,7 @@ public:
 	float getRight() const;
 
 	// desc: get center point
-	Vec2f getPosition() const;
+	Vector2f getPosition() const;
 
 	// desc: for debugging purposes
 	void debug_draw(sf::RenderTarget& renderTarget) const;

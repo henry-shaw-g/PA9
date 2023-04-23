@@ -4,11 +4,12 @@
 */
 #pragma once
 
+#include "../math/Vec2.h"
 #include "Body.h"
 
 class CircleBody : public Body {
 public:
-	CircleBody(sf::Vector2f pos, float newRadius) :
+	CircleBody(Vector2f pos, float newRadius) :
 		Body(pos), radius(newRadius) {}
 
 	float radius = 0.f;
