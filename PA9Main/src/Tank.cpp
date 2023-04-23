@@ -1,6 +1,6 @@
 #include "Tank.h"
 
-Tank::Tank(float initX, float initY, float radius) : CircleBody(Vec2f(initX, initY), radius) {
+Tank::Tank(float initX, float initY, float radius) : CircleBody(Vector2f(initX, initY), radius) {
 	maxV = 0.5;
 	maxAngV = 1; // this can stay here
 	radians = 0;
@@ -57,15 +57,15 @@ void Tank::moveObject() {
 	}
 }
 
-Vec2f Tank::getFrontDir() const {
+Vector2f Tank::getFrontDir() const {
 	const float* matrix = getTransform().getMatrix();
 	// this is like the basis x vector for the rotation of the tank (forward)
 	// its a 4x4 matrix for some reason
-	return Vec2f(matrix[4], matrix[5]);
+	return Vector2f(matrix[4], matrix[5]);
 }
 
-Vec2f Tank::getRightDir() const {
+Vector2f Tank::getRightDir() const {
 	const float* matrix = getTransform().getMatrix();
 	// this is the basis y vector for the rotation of the tank (right?)
-	return Vec2f(matrix[0], matrix[1]);
+	return Vector2f(matrix[0], matrix[1]);
 }

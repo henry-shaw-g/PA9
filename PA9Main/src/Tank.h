@@ -20,8 +20,8 @@ private:
 	sf::Sprite chassisSprite;
 	sf::Sprite turretSprite;
 
-	Vec2f getFrontDir() const;
-	Vec2f getRightDir() const;
+	Vector2f getFrontDir() const;
+	Vector2f getRightDir() const;
 
 public:
 
