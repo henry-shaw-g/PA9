@@ -40,13 +40,13 @@ float AxisBoxBody::getRight() const {
 }
 
 Vector2f AxisBoxBody::getPosition() const {
-	return Vec2f(left + width * 0.5f, top + height * 0.5f);
+	return Vector2f(left + width * 0.5f, top + height * 0.5f);
 }
 
 void AxisBoxBody::debug_draw(sf::RenderTarget& renderTarget) const {
 	sf::RectangleShape rectShape;
 	rectShape.setPosition(top, left);
-	rectShape.setSize(Vec2f(width, height));
+	rectShape.setSize(Vector2f(width, height));
 	rectShape.setOutlineColor(sf::Color::Red);
 	rectShape.setFillColor(sf::Color::Transparent);
 	rectShape.setOutlineThickness(2.f);

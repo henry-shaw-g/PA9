@@ -27,8 +27,8 @@ public:
 	Vector2f velocity;
 
 	//Body object constructor
-	Body(Vec2f pos) :
-		velocity(Vec2f::Zero)
+	Body(Vector2f pos) :
+		velocity(Vec2::Zero)
 	{
 		setPosition(pos);
 		index = -1;
@@ -47,7 +47,7 @@ public:
 	}
 
 	//Get the current Velocity of the object
-	Vec2f getVelocity() { //might make virtual to make sure walls always return a value of 0
+	Vector2f getVelocity() { //might make virtual to make sure walls always return a value of 0
 		return velocity;
 	}
 
