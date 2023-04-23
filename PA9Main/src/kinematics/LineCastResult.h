@@ -13,10 +13,10 @@ class LineCastResult {
 public:
 	float t; // record this so we can choose minimum result if casting over many
 	bool intersection = false;
-	Vec2f p0 = Vec2f::Zero;
-	Vec2f p1 = Vec2f::Zero;
-	Vec2f point = Vec2f::Zero; // point of intersection between ray and 
-	Vec2f normal = Vec2f::Zero; // normal of the surface at the point of intersection (may use for bouncing bullets?)
+	Vector2f p0 = Vec2::Zero;
+	Vector2f p1 = Vec2::Zero;
+	Vector2f point = Vec2::Zero; // point of intersection between ray and 
+	Vector2f normal = Vec2::Zero; // normal of the surface at the point of intersection (may use for bouncing bullets?)
 
 	void debug_draw(sf::RenderTarget& renderTarget) const {
 		sf::CircleShape circle(3.0f, 8);

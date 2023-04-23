@@ -11,8 +11,8 @@
 class CollisionResult {
 public:
 	bool collided = false;
-	Vec2f point = Vec2f::Zero; // roughly the point of contact
-	Vec2f offset = Vec2f::Zero; // encodes the pushback direction and distance
+	Vector2f point = Vec2::Zero; // roughly the point of contact
+	Vector2f offset = Vec2::Zero; // encodes the pushback direction and distance
 
 	void debug_draw(sf::RenderTarget& renderTarget) {
 		sf::CircleShape circle(3.0f, 8);
