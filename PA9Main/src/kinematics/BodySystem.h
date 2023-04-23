@@ -39,7 +39,7 @@ public:
 	void removeBody(Body& body);
 
 	// desc: find nearest intersection against a body / tile in system
-	LineCastResult lineCast(Vec2f p0, Vec2f p1);
+	LineCastResult lineCast(Vector2f p0, Vector2f p1);
 
 	// desc: draw bodies as wireframes for debugging
 	void debug_drawBodies(sf::RenderTarget& renderTarget);
@@ -59,10 +59,10 @@ private:
 	CollisionResult checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2);
 
 	// desc: get line cast result on a circle:
-	LineCastResult checkCircleLineCast(const CircleBody& body, Vec2f p0, Vec2f p1) const;
+	LineCastResult checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const;
 	
 	// desc: get line cast result on an AABB:
-	LineCastResult checkAxisBoxLineCast(const AxisBoxBody& body, Vec2f p0, Vec2f p1) const;
+	LineCastResult checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const;
 
 	bool invalidBodyIndex(uint index);
 

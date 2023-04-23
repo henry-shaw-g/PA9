@@ -5,6 +5,9 @@
 
 #include <cmath>
 
+#include "SFML/System.hpp"
+
+#include "../math/Vec2.h"
 #include "BodySystem.h"
 
 static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
@@ -46,9 +49,9 @@ void BodySystem::update(float dt) {
 	{
 		for (int i = 0; i < dynamicBodies.size(); ++i) {
 			Body& b = *dynamicBodies[i];
-			Vec2f p0 = b.getPosition();
-			Vec2f v = b.velocity;
-			Vec2f p1 = p0 + v * dt;
+			Vector2f p0 = b.getPosition();
+			Vector2f v = b.velocity;
+			Vector2f p1 = p0 + v * dt;
 			b.setPosition(p1);
 		}
 	}
@@ -138,7 +141,7 @@ void BodySystem::removeBody(Body& body)
 	body.setIndex(-1);
 }
 
-LineCastResult BodySystem::lineCast(Vec2f p0, Vec2f p1) {
+LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
 	LineCastResult result;
 
 	result = checkAxisBoxLineCast(testBox, p0, p1);
@@ -185,11 +188,11 @@ void BodySystem::debug_drawLineCasts(sf::RenderTarget& renderTarget) {
 
 CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2) {
 	CollisionResult result;
-	Vec2f r = b2.getPosition() - b1.getPosition();
+	Vector2f r = b2.getPosition() - b1.getPosition();
 	float d12 = b1.radius + b2.radius;
-	if (r.dot(r) < d12 * d12) {
+	if (Vec2::dot(r, r) < d12 * d12) {
 		result.collided = true;
-		float d = r.mag();
+		float d = Vec2::mag(r);
 		float o = d12 - d; // intersection depth between circle surface
 		float m1 = b1.radius - o / 2; // distance from intersection midpoint and b1 surface
 		result.offset = r / d * (o + PUSHBACK_EPSILON);
@@ -209,16 +212,16 @@ CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, cons
 	float abH = b2.getHeight();
 	float cR = b1.radius;
 
-	Vec2f r0 = b1.getPosition() - b2.getPosition();
-	Vec2f close = Vec2f(
+	Vector2f r0 = b1.getPosition() - b2.getPosition();
+	Vector2f close = Vector2f(
 		std::fmin(std::fmax(r0.x, -abW * 0.5f), abW * 0.5f),
 		std::fmin(std::fmax(r0.y, -abH * 0.5f), abH * 0.5f)
 	);
-	Vec2f r1 = close - r0;
+	Vector2f r1 = close - r0;
 
-	if (r1.dot(r1) < cR * cR) {
+	if (Vec2::dot(r1, r1) < cR * cR) {
 		result.collided = true;
-		float d = r1.mag();
+		float d = Vec2::mag(r1);
 		float o = cR - d;
 		result.offset = r1 / d * o;
 		result.point = close + b2.getPosition();
@@ -230,22 +233,24 @@ CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, cons
 	return result;
 }
 
-LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vec2f p0, Vec2f p1) const {
+LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const {
 	// do a bunch of projections to find nearest point on line to circle
-	Vec2f u = p1 - p0;
-	Vec2f v = body.getPosition() - p0;
-	Vec2f w = v * (v.dot(u) / u.dot(u));
-	Vec2f o = u - w;
+	Vector2f u = p1 - p0;
+	Vector2f v = body.getPosition() - p0;
+	Vector2f w = v * (Vec2::dot(u, v) / Vec2::dot(u, u));
+	Vector2f o = u - w;
 
 	LineCastResult result;
 	// check radius and get intersection point
-	if (o.dot(o) < body.radius * body.radius) {
+	if (Vec2::dot(u, v) < body.radius * body.radius) {
 		result.intersection = true;
-		float d = sqrt(body.radius * body.radius + o.dot(o));
-		result.point = w - d * u.norm();
+		float d = sqrt(body.radius * body.radius + Vec2::dot(o, o));
+		Vector2f p = d * Vec2::norm(u);
+		Vector2f huh = w - (p)+p0;
+		result.point = huh;
 		result.normal = result.point - body.getPosition();
 	}
-	{
+	else {
 		result.intersection = false;
 	}
 	return result;
@@ -255,17 +260,16 @@ static float lineCast_solveAxisBoxSide(float r1, float r2, float s1, float a, fl
 	if (fequal(r1)) {
 		return -1.f;
 	}
-	
 	float t = s1 / r1;
 	float s2 = t * r2;
 	return (a < s2 && s2 < b) ? t : -1.f;
 }
 
-LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vec2f p0, Vec2f p1) const {
+LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const {
 	// parameter which we will solve for against every plane of the axis box
 	float tmin = 2.f; // the maximum value we care about is 1 so this is fine
 	float t;
-	Vec2f r = p1 - p0;
+	Vector2f r = p1 - p0;
 	float left = body.getLeft() - p0.x, top = body.getTop() - p0.y, 
 		right = body.getRight() - p0.x, bottom = body.getBottom() - p0.y;
 
