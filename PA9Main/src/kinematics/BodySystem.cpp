@@ -319,6 +319,10 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 // desc: controlls the movement for all objects on the board
 void BodySystem::moveObjects(Tank& player1, Tank& player2) {
 
+	/*
+	Player 1 movement
+	*/
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
 		player1.move(player1.getFrontDir() * -.5f);
 		//move(.1 * cos(radians), .1 * sin(radians));
@@ -338,6 +342,10 @@ void BodySystem::moveObjects(Tank& player1, Tank& player2) {
 		player1.rotate(-player1.getMaxAngV());
 		//setRadians();
 	}
+
+	/*
+	Player 2 Movement
+	*/
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 		player2.move(player2.getFrontDir() * -.5f);

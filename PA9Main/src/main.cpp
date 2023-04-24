@@ -78,8 +78,9 @@ int main(void) {
 	// update loop
 
 	Tank newPlayer(50, 100, 16);
-	Tank player2(300, 100, 16);
+	Tank player2(100, 100, 16);
 	testBodySystem.addBody(newPlayer);
+	testBodySystem.addBody(player2);
 
 	while (window.isOpen()) {
 		// EVENTS & PROCESS PAUSING
