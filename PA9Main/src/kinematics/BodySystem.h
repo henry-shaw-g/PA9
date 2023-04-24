@@ -16,6 +16,7 @@
 #include "Body.h"
 #include "CircleBody.h"
 #include "AxisBoxBody.h"
+#include "../Tank.h"
 
 typedef unsigned int uint;
 
@@ -49,6 +50,10 @@ public:
 
 	// desc: draw linecast intersections for debugging
 	void debug_drawLineCasts(sf::RenderTarget& renderTarget);
+
+	// desc: controlls the movement for all objects on the board
+	void moveObjects(Tank& player1, Tank& player2);
+
 private:
 	
 	// desc: get collision info for two circles colliding

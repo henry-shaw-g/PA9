@@ -9,6 +9,7 @@
 
 #include "../math/Vec2.h"
 #include "BodySystem.h"
+#include "../Tank.h"
 
 static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
 static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
@@ -25,16 +26,6 @@ inline bool fequal (float n) {
 // fuzzy equality check for floats a & b
 inline bool fequal(float a, float b) {
 	return (a - b) * (a - b) < FCOMPARE_EPSILON;
-}
-
-inline static float solveAlignedIntersect(float xt, float dx) {
-	if (fequal(dx)) {
-		// since we are checking against segment, only care about ranges from 0 to 1
-		return 2.f; 
-	}
-	else {
-		return xt / dx;
-	}
 }
 
 /* BODY SYSTEM */
@@ -142,13 +133,32 @@ void BodySystem::removeBody(Body& body)
 }
 
 LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
-	LineCastResult result;
+	LineCastResult result, minResult;
+	minResult.t = 2; // t is only valid between 0 and 1 so
+
+	for (int i = 0; i < dynamicBodies.size(); ++i) {
+		Body& b = *dynamicBodies[i];
+		switch (b.getType()) {
+			case BodyType::Circle:
+				result = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
+				break;
+			default:
+				result.intersection = false;
+				break;
+		}
+
+		if (result.intersection && result.t < minResult.t)
+			minResult = result;
+	}
 
 	result = checkAxisBoxLineCast(testBox, p0, p1);
-	debug_lineCasts.push_back(result);
-	
+	if (result.intersection && result.t < minResult.t)
+		minResult = result;
 
-	return result;
+	minResult.p0 = p0;
+	minResult.p1 = p1;
+	debug_lineCasts.push_back(minResult);
+	return minResult;
 }
 
 bool BodySystem::invalidBodyIndex(uint index) {
@@ -237,17 +247,25 @@ LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f 
 	// do a bunch of projections to find nearest point on line to circle
 	Vector2f u = p1 - p0;
 	Vector2f v = body.getPosition() - p0;
-	Vector2f w = v * (Vec2::dot(u, v) / Vec2::dot(u, u));
-	Vector2f o = u - w;
+	Vector2f w = u * (Vec2::dot(u, v) / Vec2::dot(u, u));
+	Vector2f o = v - w;
 
 	LineCastResult result;
-	// check radius and get intersection point
-	if (Vec2::dot(u, v) < body.radius * body.radius) {
-		result.intersection = true;
-		float d = sqrt(body.radius * body.radius + Vec2::dot(o, o));
-		Vector2f p = d * Vec2::norm(u);
-		Vector2f huh = w - (p)+p0;
-		result.point = huh;
+	result.p0 = p0, result.p1 = p1;
+
+	// check radius to see if intersecting
+	if (Vec2::dot(o, o) < body.radius * body.radius) {
+		// find intersection point
+		//float uD = Vec2::mag(u); // todo: handle uD = zero
+		//float wD = Vec2::mag(w);
+		//float oD = sqrt(body.radius * body.radius - Vec2::dot(o, o));
+		//float t = (wD - oD) / uD;
+		float d_mag = sqrt(body.radius * body.radius - Vec2::dot(o, o));
+		Vector2f i = w - Vec2::norm(u) * d_mag;
+		float t = Vec2::dot(i, u) / Vec2::dot(u, u);
+		result.intersection = 0.f <= t && t <= 1.f;
+		result.t = t;
+		result.point = i + p0;
 		result.normal = result.point - body.getPosition();
 	}
 	else {
@@ -296,4 +314,56 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 	}
 
 	return result;
+}
+
+// desc: controlls the movement for all objects on the board
+void BodySystem::moveObjects(Tank& player1, Tank& player2) {
+
+	/*
+	Player 1 movement
+	*/
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		player1.move(player1.getFrontDir() * -.5f);
+		//move(.1 * cos(radians), .1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		player1.move(player1.getFrontDir() * .5f);
+		//move(-.1 * cos(radians), -.1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		player1.rotate(player1.getMaxAngV());
+		//setRadians();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		player1.rotate(-player1.getMaxAngV());
+		//setRadians();
+	}
+
+	/*
+	Player 2 Movement
+	*/
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		player2.move(player2.getFrontDir() * -.5f);
+		//move(.1 * cos(radians), .1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		player2.move(player2.getFrontDir() * .5f);
+		//move(-.1 * cos(radians), -.1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		player2.rotate(player2.getMaxAngV());
+		//setRadians();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		player2.rotate(-player2.getMaxAngV());
+		//setRadians();
+	}
 }

@@ -20,10 +20,10 @@ private:
 	sf::Sprite chassisSprite;
 	sf::Sprite turretSprite;
 
+public:
+
 	Vector2f getFrontDir() const;
 	Vector2f getRightDir() const;
-
-public:
 
 	// ctor: initialize tank with position and collider radius
 	Tank(float initX, float initY, float radius);
@@ -33,6 +33,10 @@ public:
 
 	void setRadians() {
 		radians = (M_PI / 180) * getRotation();
+	}
+
+	float getMaxAngV() {
+		return maxAngV;
 	}
 
 	void moveObject();

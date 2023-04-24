@@ -142,7 +142,6 @@
     <ClCompile Include="src\Tank.cpp" />
     <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
-    <ClCompile Include="src\TestKinematics.cpp" />
     <ClCompile Include="src\Walls.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -160,7 +159,6 @@
     <ClInclude Include="src\resources\Body.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\Tank.h" />
-    <ClInclude Include="src\TestKinematics.h" />
     <ClInclude Include="src\Tilesystem.h" />
     <ClInclude Include="src\walls.h" />
   </ItemGroup>
