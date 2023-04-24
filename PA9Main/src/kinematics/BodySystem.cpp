@@ -9,6 +9,7 @@
 
 #include "../math/Vec2.h"
 #include "BodySystem.h"
+#include "../Tank.h"
 
 static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
 static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
@@ -313,4 +314,48 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 	}
 
 	return result;
+}
+
+// desc: controlls the movement for all objects on the board
+void BodySystem::moveObjects(Tank& player1, Tank& player2) {
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+		player1.move(player1.getFrontDir() * -.5f);
+		//move(.1 * cos(radians), .1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+		player1.move(player1.getFrontDir() * .5f);
+		//move(-.1 * cos(radians), -.1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+		player1.rotate(player1.getMaxAngV());
+		//setRadians();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+		player1.rotate(-player1.getMaxAngV());
+		//setRadians();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+		player2.move(player2.getFrontDir() * -.5f);
+		//move(.1 * cos(radians), .1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+		player2.move(player2.getFrontDir() * .5f);
+		//move(-.1 * cos(radians), -.1 * sin(radians));
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+		player2.rotate(player2.getMaxAngV());
+		//setRadians();
+	}
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+		player2.rotate(-player2.getMaxAngV());
+		//setRadians();
+	}
 }

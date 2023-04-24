@@ -78,6 +78,7 @@ int main(void) {
 	// update loop
 
 	Tank newPlayer(50, 100, 16);
+	Tank player2(300, 100, 16);
 	testBodySystem.addBody(newPlayer);
 
 	while (window.isOpen()) {
@@ -97,7 +98,7 @@ int main(void) {
 			fpsStrStream << std::fixed << std::setprecision(0) << fps;
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
-			newPlayer.moveObject();
+			testBodySystem.moveObjects(newPlayer, player2); // change this to a body systems or independant function
 
 			// update kinematics
 			testBodySystem.update(dt);	
@@ -107,7 +108,8 @@ int main(void) {
 			window.clear(sf::Color::White);
 			// draw background layer?
 			// draw object layer
-			window.draw(newPlayer);
+			window.draw(newPlayer); // add draw statment for the other tank
+			window.draw(player2);
 			// draw debug layer
 			testBodySystem.debug_drawBodies(window);
 			testBodySystem.debug_drawCollisions(window);
