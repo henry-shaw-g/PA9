@@ -55,6 +55,7 @@ public:
 	void moveObjects(Tank& player1, Tank& player2);
 
 private:
+	void integrateBodies(float dt);
 	
 	// desc: get collision info for two circles colliding
 	// precond: b1 and b2 are unique

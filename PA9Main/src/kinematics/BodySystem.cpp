@@ -37,7 +37,7 @@ void BodySystem::update(float dt) {
 	debug_collisions.clear();
 
 	// integrate positions from velocity
-	{
+	BodySystem::integrateBodies(dt);
 		for (int i = 0; i < dynamicBodies.size(); ++i) {
 			Body& b = *dynamicBodies[i];
 			Vector2f p0 = b.getPosition();
@@ -103,6 +103,15 @@ void BodySystem::update(float dt) {
 				debug_collisions.push_back(result);
 			}
 		}
+	}
+
+void BodySystem::integrateBodies(float dt) {
+	for (int i = 0; i < dynamicBodies.size(); ++i) {
+		Body& b = *dynamicBodies[i];
+		Vector2f p0 = b.getPosition();
+		Vector2f v = b.velocity;
+		Vector2f p1 = p0 + v * dt;
+		b.setPosition(p1);
 	}
 }
 
