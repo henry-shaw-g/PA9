@@ -69,3 +69,16 @@ Vector2f Tank::getRightDir() const {
 	// this is the basis y vector for the rotation of the tank (right?)
 	return Vector2f(matrix[0], matrix[1]);
 }
+
+
+
+void Tank::shoot(float& xVal, float& yVal)
+{
+
+	float orientation = 0.0, radians = 0.0;
+	orientation = getRotation();
+	radians = orientation * (3.14159265359f / 180.0f);
+	xVal = std::cos(radians)* .2;
+	yVal = std::sin(radians)* .2;
+}
+

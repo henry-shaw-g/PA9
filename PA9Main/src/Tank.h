@@ -36,4 +36,5 @@ public:
 	}
 
 	void moveObject();
+	void shoot(float& xVal, float& yVal);
 };

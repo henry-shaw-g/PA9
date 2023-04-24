@@ -102,6 +102,19 @@ int main(void) {
 			// update kinematics
 			testBodySystem.update(dt);	
 		}
+		// shooting test
+		{
+			float xDir = 0.0, yDir = 0.0;
+			Body shot(newPlayer.getPosition());
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
+			{
+				newPlayer.shoot(xDir, yDir);
+				shot.move(xDir, yDir);
+			}
+			
+
+
+		}
 		// RENDERING
 		{
 			window.clear(sf::Color::White);

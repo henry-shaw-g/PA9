@@ -146,6 +146,7 @@
     <ClCompile Include="src\Walls.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bullet.h" />
     <ClInclude Include="src\GameConfig.h" />
     <ClInclude Include="src\gui\GuiContainer.h" />
     <ClInclude Include="src\gui\GuiView.h" />
