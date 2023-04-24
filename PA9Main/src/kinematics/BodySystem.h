@@ -55,8 +55,16 @@ public:
 	void moveObjects(Tank& player1, Tank& player2);
 
 private:
+	// desc: update the movement of bodies (move their positions according to the velocities & timesteps)
+	//	- using the 'integrate' convention since this is like a numerical integration of position
 	void integrateBodies(float dt);
-	
+
+	// desc: detect and resolve collisions between the dynamic bodies (only tanks for now)
+	void updateBodyCollisions();
+
+	// desc: detect and resolve collisions between the dynamic bodies and the tiles
+	void updateTileCollisions();
+
 	// desc: get collision info for two circles colliding
 	// precond: b1 and b2 are unique
 	CollisionResult checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2);

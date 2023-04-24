@@ -38,72 +38,13 @@ void BodySystem::update(float dt) {
 
 	// integrate positions from velocity
 	BodySystem::integrateBodies(dt);
-		for (int i = 0; i < dynamicBodies.size(); ++i) {
-			Body& b = *dynamicBodies[i];
-			Vector2f p0 = b.getPosition();
-			Vector2f v = b.velocity;
-			Vector2f p1 = p0 + v * dt;
-			b.setPosition(p1);
-		}
-	}
 
 	// detect and resolve dynamic-dynamic collisions O(n^2) approach
-	{
-		CollisionResult result;
-		for (int i = 0; i < dynamicBodies.size(); ++i) {
-			Body& b1 = *dynamicBodies[i];
-			BodyType type1 = b1.getType();
-			if (type1 == BodyType::Point)
-				continue;
-
-			result.collided = false;
-			for (int j = 0; j < dynamicBodies.size(); ++j) {
-				if (j == i) // don't do check on current
-					continue;
-				Body& b2 = *dynamicBodies[j];
-				BodyType type2 = b1.getType();
-				if (type2 == BodyType::Point)
-					continue;
-
-				uint typeMask = (uint)type1 | (uint)type2;
-				if (typeMask == (uint)BodyType::Circle) {
-					CircleBody& c1 = static_cast<CircleBody&>(b1), & c2 = static_cast<CircleBody&>(b2);
-					result = checkCircleCircleCollide(c1, c2);
-				}
-
-				if (result.collided) {
-					// for 2 dynamic objects, both get moved
-					b1.resolveCollision(result.offset * 0.5f);
-					b2.resolveCollision(-result.offset * 0.5f);
-					// record collision for debugging (maybe other purposes?)
-					debug_collisions.push_back(result);
-				}
-			}
-		}
-	}
+	updateBodyCollisions();
 
 	// detect and resolve dynamic-static(tiles) collisions
-	{
-		CollisionResult result;
-		for (int i = 0; i < dynamicBodies.size(); ++i) {
-			// TEMP: check against the tiles
-			Body& b1 = *dynamicBodies[i];
-			AxisBoxBody& tileBody = testBox;
-
-			if (b1.getType() == BodyType::Circle) {
-				CircleBody& c1 = static_cast<CircleBody&>(b1);
-				result = checkCircleAxisBoxCollide(c1, tileBody);
-				/*if (result.collided) {
-					resolveCircleAxisBoxCollide(c1, tileBody, result);
-				}*/
-			}
-
-			if (result.collided) {
-				b1.resolveCollision(result.offset);
-				debug_collisions.push_back(result);
-			}
-		}
-	}
+	updateTileCollisions();
+}
 
 void BodySystem::integrateBodies(float dt) {
 	for (int i = 0; i < dynamicBodies.size(); ++i) {
@@ -112,6 +53,64 @@ void BodySystem::integrateBodies(float dt) {
 		Vector2f v = b.velocity;
 		Vector2f p1 = p0 + v * dt;
 		b.setPosition(p1);
+	}
+}
+
+void BodySystem::updateBodyCollisions() {
+	CollisionResult result;
+	for (int i = 0; i < dynamicBodies.size(); ++i) {
+		Body& b1 = *dynamicBodies[i];
+		BodyType type1 = b1.getType();
+		if (type1 == BodyType::Point)
+			continue;
+
+		result.collided = false;
+		for (int j = 0; j < dynamicBodies.size(); ++j) {
+			if (j == i) // don't do check on current
+				continue;
+			Body& b2 = *dynamicBodies[j];
+			BodyType type2 = b1.getType();
+			if (type2 == BodyType::Point)
+				continue;
+
+			uint typeMask = (uint)type1 | (uint)type2;
+			switch (typeMask) {
+				case static_cast<uint>(BodyType::Circle):
+					result = checkCircleCircleCollide(
+						static_cast<CircleBody&>(b1),
+						static_cast<CircleBody&>(b2));
+					break;
+				default:
+					result.collided = false;
+			}
+
+			if (result.collided) {
+				// for 2 dynamic objects, both get moved
+				b1.resolveCollision(result.offset * 0.5f);
+				b2.resolveCollision(-result.offset * 0.5f);
+				// record collision for debugging (maybe other purposes?)
+				debug_collisions.push_back(result);
+			}
+		}
+	}
+}
+
+void BodySystem::updateTileCollisions() {
+	CollisionResult result;
+	for (int i = 0; i < dynamicBodies.size(); ++i) {
+		// TEMP: check against the tiles
+		Body& b1 = *dynamicBodies[i];
+		AxisBoxBody& tileBody = testBox;
+
+		if (b1.getType() == BodyType::Circle) {
+			CircleBody& c1 = static_cast<CircleBody&>(b1);
+			result = checkCircleAxisBoxCollide(c1, tileBody);
+		}
+
+		if (result.collided) {
+			b1.resolveCollision(result.offset);
+			debug_collisions.push_back(result);
+		}
 	}
 }
 
@@ -264,11 +263,6 @@ LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f 
 
 	// check radius to see if intersecting
 	if (Vec2::dot(o, o) < body.radius * body.radius) {
-		// find intersection point
-		//float uD = Vec2::mag(u); // todo: handle uD = zero
-		//float wD = Vec2::mag(w);
-		//float oD = sqrt(body.radius * body.radius - Vec2::dot(o, o));
-		//float t = (wD - oD) / uD;
 		float d_mag = sqrt(body.radius * body.radius - Vec2::dot(o, o));
 		Vector2f i = w - Vec2::norm(u) * d_mag;
 		float t = Vec2::dot(i, u) / Vec2::dot(u, u);
