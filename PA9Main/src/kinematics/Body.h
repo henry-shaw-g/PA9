@@ -59,6 +59,13 @@ public:
 		index = nIndex;
 	}
 
+	// desc: get the minimum(ish) bounding box of the the given body
+	virtual sf::FloatRect getAABB() const {
+		Vector2f position = getPosition();
+		return sf::FloatRect(position.x, position.y, 0.f, 0.f);
+	}
+
+	// desc: identify the type of the body for the manager system (could consider using some kind of dynamic dispatch instead here)
 	virtual BodyType getType() const { return BodyType::Point; }
 
 	virtual void debug_draw(sf::RenderTarget& rt) const {

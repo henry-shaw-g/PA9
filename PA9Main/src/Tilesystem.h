@@ -13,20 +13,28 @@
 class Tile: public sf::RectangleShape
 {
 public:
-	Tile() {}
-	Tile(const sf::Vector2f& newSize, const sf::Vector2f& position, const sf::Color& newColor) : sf::RectangleShape(newSize) {
-		this->setPosition(position);
-		this->setFillColor(newColor);
-	}
 
-	void setIsWall(bool isWall) { wall = isWall; }
-	bool getIsWall() const { return wall; }
+	Tile();
+
+	Tile(const sf::Vector2f& newSize, const sf::Vector2f& position, const sf::Color& newColor);
+
+	bool getVisible() const;
+
+	bool getIsWall() const;
+
+	void setIsWall(bool isWall);
+
+	void setColor(const sf::Color& color);
+
+	void debug_setVisited(bool visited);
+
 private:
-	bool wall = false;
+	sf::Color color;
+	bool isWall = false;
+	bool debug_visited = false; // flag if the the wall was visited in the last collision update
 };
 
 class Tiles : public sf::Drawable {
-	using uint = unsigned int;
 public:
 	// ctor:
 	Tiles();
@@ -34,9 +42,11 @@ public:
 	// dtor:
 	~Tiles();
 
+	Tile& getTile(int col, int row) const;
+
 	// desc: check if the tiles at the grid coordinate are collidable (wall there)
 	// precond: col and row are within grid
-	bool canTileCollide(uint col, uint row) const;
+	bool canTileCollide(int col, int row) const;
 
 	// desc: get the dimensions of a single tile
 	Vector2f getTileSize() const;
@@ -53,7 +63,7 @@ private:
 	const Vector2u gridSize;
 
 	// desc: utility to get tile index
-	uint indexFromColRow(uint col, uint row) const;
+	int indexFromColRow(int col, int row) const;
 };
 
 // commented out because was getting linker errors from it

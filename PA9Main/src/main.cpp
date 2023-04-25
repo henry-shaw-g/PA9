@@ -14,7 +14,7 @@
 #include "kinematics/BodySystem.h"
 #include "Tank.h"
 #include "resources/ResourceManager.h"
-#include "Tilesystem.h"
+#include "TileSystem.h"
 
 int main(void) {
 	// setup resources
@@ -64,22 +64,25 @@ int main(void) {
 		const float* m = tf.getMatrix();
 	}
 
-	// test body system stuff
-	BodySystem testBodySystem;
-	CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
-	CircleBody cb2(Vector2f(300, 100), 20);
+	// test tile system stuff
+	Tiles tiles;
+
+	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
+	BodySystem testBodySystem(tiles);
+	//CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
+	//CircleBody cb2(Vector2f(300, 100), 20);
 	{
-		testBodySystem.addBody(cb1);
-		testBodySystem.addBody(cb2);
-		cb1.setVelocity(Vector2f(0, 0)); // 5 unit pixels / sec idk
-		cb2.setVelocity(Vector2f(0, 0));
+		//testBodySystem.addBody(cb1);
+		//testBodySystem.addBody(cb2);
+		//cb1.setVelocity(Vector2f(0, 0)); // 5 unit pixels / sec idk
+		//cb2.setVelocity(Vector2f(0, 0));
 	}
 
 	// update loop
 
-	Tank newPlayer(50, 100, 16);
+	Tank player1(50, 100, 16);
 	Tank player2(100, 100, 16);
-	testBodySystem.addBody(newPlayer);
+	testBodySystem.addBody(player1);
 	testBodySystem.addBody(player2);
 
 	while (window.isOpen()) {
@@ -99,7 +102,7 @@ int main(void) {
 			fpsStrStream << std::fixed << std::setprecision(0) << fps;
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
-			testBodySystem.moveObjects(newPlayer, player2); // change this to a body systems or independant function
+			testBodySystem.moveObjects(player1, player2, dt); // change this to a body systems or independant function
 
 			// update kinematics
 			testBodySystem.update(dt);	
@@ -107,10 +110,10 @@ int main(void) {
 		// shooting test
 		{
 			float xDir = 0.0, yDir = 0.0;
-			Body shot(newPlayer.getPosition());
+			Body shot(player1.getPosition());
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
 			{
-				newPlayer.shoot(xDir, yDir);
+				player1.shoot(xDir, yDir);
 				shot.move(xDir, yDir);
 			}
 			
@@ -121,8 +124,9 @@ int main(void) {
 		{
 			window.clear(sf::Color::White);
 			// draw background layer?
+			window.draw(tiles);
 			// draw object layer
-			window.draw(newPlayer); // add draw statment for the other tank
+			window.draw(player1); // add draw statment for the other tank
 			window.draw(player2);
 			// draw debug layer
 			testBodySystem.debug_drawBodies(window);

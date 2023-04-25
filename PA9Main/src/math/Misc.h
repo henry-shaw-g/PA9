@@ -18,8 +18,8 @@ namespace math {
 	}
 
 	template <typename T>
-	T clamp(T n, T min, T high) {
-		return math::max(math::min(n, min), max);
+	T clamp(T n, T low, T high) {
+		return math::min(math::max(n, low), high);
 	}
 	
 }

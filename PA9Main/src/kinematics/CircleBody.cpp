@@ -14,3 +14,10 @@ void CircleBody::debug_draw(sf::RenderTarget& renderTarget) const {
 	circle.setOrigin(radius, radius);
 	renderTarget.draw(circle, getTransform());
 }
+
+sf::FloatRect CircleBody::getAABB() const
+{
+	Vector2f position = getPosition();
+	Vector2f r(radius, radius);
+	return sf::FloatRect(position - r, 2.f * r);
+}

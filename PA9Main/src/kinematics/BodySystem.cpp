@@ -4,12 +4,12 @@
 */
 
 #include <cmath>
+#include <algorithm>
 
 #include "SFML/System.hpp"
 
-#include "../math/Vec2.h"
+#include "../math/Misc.h"
 #include "BodySystem.h"
-#include "../Tank.h"
 
 static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
 static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
@@ -30,7 +30,8 @@ inline bool fequal(float a, float b) {
 
 /* BODY SYSTEM */
 
-BodySystem::BodySystem() {}
+BodySystem::BodySystem(Tiles& tiles) :
+	tilesRef (tiles) {}
 
 void BodySystem::update(float dt) {
 	// clear last step's collision records
@@ -57,6 +58,7 @@ void BodySystem::integrateBodies(float dt) {
 }
 
 void BodySystem::updateBodyCollisions() {
+	using uint = unsigned int;
 	CollisionResult result;
 	for (int i = 0; i < dynamicBodies.size(); ++i) {
 		Body& b1 = *dynamicBodies[i];
@@ -98,19 +100,57 @@ void BodySystem::updateBodyCollisions() {
 void BodySystem::updateTileCollisions() {
 	CollisionResult result;
 	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		// TEMP: check against the tiles
-		Body& b1 = *dynamicBodies[i];
-		AxisBoxBody& tileBody = testBox;
+		handleTileBodyCollision(*dynamicBodies[i]);
+	}
+}
 
-		if (b1.getType() == BodyType::Circle) {
-			CircleBody& c1 = static_cast<CircleBody&>(b1);
-			result = checkCircleAxisBoxCollide(c1, tileBody);
+void BodySystem::handleTileBodyCollision(Body& b)
+{
+	// get the maximum AABB of the body
+	sf::FloatRect aabb = b.getAABB();
+	// get the maximum rect of coordinates containing the AABB
+	Vector2f tileSize = tilesRef.getTileSize();
+	float x0 = std::floor(aabb.left / tileSize.x);
+	float x1 = std::ceil((aabb.left + aabb.width) / tileSize.x);
+	float y0 = std::floor(aabb.top / tileSize.y);
+	float y1 = std::ceil((aabb.top + aabb.height) / tileSize.y);
+		
+	// limit the rect to be in the tile system grid
+	Vector2u gridSize = tilesRef.getGridSize();
+	int col0 = math::clamp((int)x0 - 1, 
+		0, (int)gridSize.x - 1); // 0u literal needed so the template func knows what the args are
+	int col1 = math::clamp((int)x1, 
+		0, (int)gridSize.x - 1);
+	int row0 = math::clamp((int)y0 - 1, 
+		0, (int)gridSize.y - 1);
+	int row1 = math::clamp((int)y1, 
+		0, (int)gridSize.y -1);
+
+	// go through each tile and check / resolve collision w/ body
+	BodyType bodyType = b.getType();
+	AxisBoxBody tileBody;
+	CollisionResult result;
+	int row, col;
+	for (row = row0; row <= row1; ++row) {
+		
+		for (col = col0; col <= col1; ++col) {
+			tilesRef.getTile(col, row).debug_setVisited(true);
+			if (!tilesRef.canTileCollide(col, row))
+				continue;
+			tileBody = AxisBoxBody::fromTile(col, row, tileSize.x, tileSize.y);
+			switch (bodyType) {
+				case BodyType::Circle:
+					result = checkCircleAxisBoxCollide(static_cast<CircleBody&>(b), tileBody);
+					break;
+				default:
+					result.collided = false;
+			}
+			if (result.collided) {
+				b.resolveCollision(result.offset);
+				debug_collisions.push_back(result);
+			}
 		}
 
-		if (result.collided) {
-			b1.resolveCollision(result.offset);
-			debug_collisions.push_back(result);
-		}
 	}
 }
 
@@ -159,9 +199,10 @@ LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
 			minResult = result;
 	}
 
-	result = checkAxisBoxLineCast(testBox, p0, p1);
+	// TODO: implement checks against the tiles
+	/*result = checkAxisBoxLineCast(testBox, p0, p1);
 	if (result.intersection && result.t < minResult.t)
-		minResult = result;
+		minResult = result;*/
 
 	minResult.p0 = p0;
 	minResult.p1 = p1;
@@ -179,9 +220,6 @@ void BodySystem::debug_drawBodies(sf::RenderTarget& renderTarget) {
 		Body& b = *dynamicBodies[i];
 		b.debug_draw(renderTarget);
 	}
-
-	// TEMP
-	testBox.debug_draw(renderTarget);
 }
 
 void BodySystem::debug_drawCollisions(sf::RenderTarget& renderTarget) {

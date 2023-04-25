@@ -11,6 +11,7 @@
 
 #include "SFML/Graphics.hpp"
 
+#include "../TileSystem.h"
 #include "CollisionResult.h"
 #include "LineCastResult.h"
 #include "Body.h"
@@ -18,16 +19,14 @@
 #include "AxisBoxBody.h"
 #include "../Tank.h"
 
-typedef unsigned int uint;
-
 class KinematicsTests; // forward declare for the testing class
 
 class BodySystem {
 public:
 	friend KinematicsTests;
 
-	// ctor: default
-	BodySystem();
+	// ctor:
+	BodySystem(Tiles& refTiles);
 
 	// desc: run a body update
 	// args: (float) dt, timestep (time between frames, how much we should step the simulation forward), in seconds btw
@@ -52,7 +51,7 @@ public:
 	void debug_drawLineCasts(sf::RenderTarget& renderTarget);
 
 	// desc: controlls the movement for all objects on the board
-	void moveObjects(Tank& player1, Tank& player2);
+	void moveObjects(Tank& player1, Tank& player2, float dt);
 
 private:
 	// desc: update the movement of bodies (move their positions according to the velocities & timesteps)
@@ -64,6 +63,9 @@ private:
 
 	// desc: detect and resolve collisions between the dynamic bodies and the tiles
 	void updateTileCollisions();
+
+	// desc: detect and resolve collisions with tiles for 1 body
+	void handleTileBodyCollision(Body& b);
 
 	// desc: get collision info for two circles colliding
 	// precond: b1 and b2 are unique
@@ -80,9 +82,8 @@ private:
 
 	bool invalidBodyIndex(int index);
 
+	const Tiles& tilesRef; // aggregation reference to the tiles for the game (the Tiles must outlive lifetime of BodySystem)
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;
 	std::vector<LineCastResult> debug_lineCasts;
-	// TEMP
-	AxisBoxBody testBox = AxisBoxBody::fromTile(3, 3, 50, 50);
 };
