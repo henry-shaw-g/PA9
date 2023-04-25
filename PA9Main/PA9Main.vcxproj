@@ -156,6 +156,7 @@
     <ClInclude Include="src\kinematics\Body.h" />
     <ClInclude Include="src\kinematics\CollisionResult.h" />
     <ClInclude Include="src\kinematics\LineCastResult.h" />
+    <ClInclude Include="src\math\Misc.h" />
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\Body.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
