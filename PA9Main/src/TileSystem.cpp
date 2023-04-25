@@ -60,11 +60,6 @@ Tiles::Tiles() :
 		}
 	}
 
-	// temp map:
-	tileArray[indexFromColRow(1, 1)].setIsWall(true);
-	tileArray[indexFromColRow(2, 1)].setIsWall(true);
-	tileArray[indexFromColRow(3, 1)].setIsWall(true);
-	tileArray[indexFromColRow(4, 1)].setIsWall(true);
 }
 
 Tiles::~Tiles()

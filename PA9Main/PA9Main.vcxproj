@@ -139,6 +139,7 @@
     <ClCompile Include="src\kinematics\BodySystem.cpp" />
     <ClCompile Include="src\kinematics\CircleBody.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
     <ClCompile Include="src\Tank.cpp" />
     <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="src\kinematics\Body.h" />
     <ClInclude Include="src\kinematics\CollisionResult.h" />
     <ClInclude Include="src\kinematics\LineCastResult.h" />
+    <ClInclude Include="src\Map.h" />
     <ClInclude Include="src\math\Misc.h" />
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\Body.h" />
