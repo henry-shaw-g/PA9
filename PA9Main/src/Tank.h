@@ -17,6 +17,11 @@ private:
 	float maxAngV;
 	float radians;
 
+	float forwardInput;
+	float backInput;
+	float leftInput;
+	float rightInput;
+
 	sf::Sprite chassisSprite;
 	sf::Sprite turretSprite;
 
@@ -39,6 +44,17 @@ public:
 		return maxAngV;
 	}
 
-	void moveObject();
+	// desc: set the various input states
+	void setForward(float input);
+	void setBack(float input);
+	void setLeft(float input);
+	void setRight(float inptu);
+
+
+
+
+	// desc: update the tank (handle controls)
+	void update(float dt);
+
 	void shoot(float& xVal, float& yVal);
 };

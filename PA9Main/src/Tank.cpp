@@ -1,10 +1,16 @@
 #include "Tank.h"
 
 Tank::Tank(float initX, float initY, float radius) : CircleBody(Vector2f(initX, initY), radius) {
-	maxV = 0.5;
-	maxAngV = 1; // this can stay here
+	maxV = 50;
+	maxAngV = 110; // deg / s?
 	radians = 0;
 	setPosition(initX, initY);
+
+	// initialize input
+	forwardInput = 0;
+	backInput = 0;
+	leftInput = 0;
+	rightInput = 0;
 
 	// setup chassis sprite
 	const sf::Texture& tankTextureRef = ResourceManager::service()
@@ -32,29 +38,15 @@ void Tank::draw(sf::RenderTarget & renderTarget, sf::RenderStates _) const {
 	renderTarget.draw(turretSprite, tankTransform);
 }
 
-void Tank::moveObject() {
+void Tank::update(float dt) {
 	// note: do not call window clear or window display in individual rendering steps, those should only be called at the begining / end of the frame
 	// also we only need to check the key state one time each frame so these should be if statements rather than while loops
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		move(getFrontDir() * -.5f);
-		//move(.1 * cos(radians), .1 * sin(radians));
-	}
+	float move = forwardInput - backInput;
+	float turn = rightInput - leftInput;
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		move(getFrontDir() * .5f);
-		//move(-.1 * cos(radians), -.1 * sin(radians));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		rotate(maxAngV);
-		//setRadians();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		rotate(-maxAngV);
-		//setRadians();
-	}
+	setVelocity(-getFrontDir() * move * maxV);
+	rotate(turn * maxAngV * dt);
 }
 
 Vector2f Tank::getFrontDir() const {
@@ -70,8 +62,6 @@ Vector2f Tank::getRightDir() const {
 	return Vector2f(matrix[0], matrix[1]);
 }
 
-
-
 void Tank::shoot(float& xVal, float& yVal)
 {
 
@@ -82,3 +72,8 @@ void Tank::shoot(float& xVal, float& yVal)
 	yVal = std::sin(radians)* .2;
 }
 
+// input setters:
+void Tank::setForward(float input) { forwardInput = input; }
+void Tank::setBack(float input) { backInput = input; }
+void Tank::setLeft(float input) { leftInput = input; }
+void Tank::setRight(float input) { rightInput = input; }

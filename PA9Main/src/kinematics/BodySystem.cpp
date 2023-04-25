@@ -319,54 +319,20 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 	return result;
 }
 
-// desc: controlls the movement for all objects on the board
-void BodySystem::moveObjects(Tank& player1, Tank& player2) {
-
-	/*
-	Player 1 movement
-	*/
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-		player1.move(player1.getFrontDir() * -.5f);
-		//move(.1 * cos(radians), .1 * sin(radians));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-		player1.move(player1.getFrontDir() * .5f);
-		//move(-.1 * cos(radians), -.1 * sin(radians));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		player1.rotate(player1.getMaxAngV());
-		//setRadians();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		player1.rotate(-player1.getMaxAngV());
-		//setRadians();
-	}
-
-	/*
-	Player 2 Movement
-	*/
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-		player2.move(player2.getFrontDir() * -.5f);
-		//move(.1 * cos(radians), .1 * sin(radians));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-		player2.move(player2.getFrontDir() * .5f);
-		//move(-.1 * cos(radians), -.1 * sin(radians));
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-		player2.rotate(player2.getMaxAngV());
-		//setRadians();
-	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-		player2.rotate(-player2.getMaxAngV());
-		//setRadians();
-	}
+// desc: controlls the movement for all objects on the board'
+// consider moving this out of BodySystem (probably belongs in the update loop of a game wrapper)
+void BodySystem::moveObjects(Tank& player1, Tank& player2, float dt) {
+	using sf::Keyboard;
+	/* PLAYER 1 */
+	player1.setForward(Keyboard::isKeyPressed(Keyboard::W)); // note: the boolean gets casted to a float as 0f or 1f
+	player1.setBack(Keyboard::isKeyPressed(Keyboard::S));
+	player1.setLeft(Keyboard::isKeyPressed(Keyboard::A));
+	player1.setRight(Keyboard::isKeyPressed(Keyboard::D));
+	player1.update(dt);
+	/* PLAYER 2*/
+	player2.setForward(Keyboard::isKeyPressed(Keyboard::Up)); // note: the boolean gets casted to a float as 0f or 1f
+	player2.setBack(Keyboard::isKeyPressed(Keyboard::Down));
+	player2.setLeft(Keyboard::isKeyPressed(Keyboard::Left));
+	player2.setRight(Keyboard::isKeyPressed(Keyboard::Right));
+	player2.update(dt);
 }
