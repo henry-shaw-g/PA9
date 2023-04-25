@@ -14,7 +14,7 @@ Tank::Tank(float initX, float initY, float radius) : CircleBody(Vector2f(initX, 
 
 	// setup chassis sprite
 	const sf::Texture& tankTextureRef = ResourceManager::service()
-		.getTextureRef("tank_blue");
+		.getTextureRef("tank");
 	chassisSprite.setTexture(tankTextureRef);
 	chassisSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
 	// this will all be relative to the tank position / rotation after we do some stuff
@@ -34,8 +34,9 @@ void Tank::draw(sf::RenderTarget & renderTarget, sf::RenderStates _) const {
 	sf::Transform tankTransform = getTransform();
 	
 	// use the transform to draw component sprites relatively:
+	/*renderTarget.draw(chassisSprite, tankTransform);
+	renderTarget.draw(turretSprite, tankTransform);*/
 	renderTarget.draw(chassisSprite, tankTransform);
-	renderTarget.draw(turretSprite, tankTransform);
 }
 
 void Tank::update(float dt) {

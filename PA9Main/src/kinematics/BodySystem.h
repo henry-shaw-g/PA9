@@ -26,7 +26,7 @@ public:
 	friend KinematicsTests;
 
 	// ctor:
-	BodySystem(Tiles& refTiles);
+	BodySystem();
 
 	// desc: run a body update
 	// args: (float) dt, timestep (time between frames, how much we should step the simulation forward), in seconds btw
@@ -65,7 +65,7 @@ private:
 	void updateTileCollisions();
 
 	// desc: detect and resolve collisions with tiles for 1 body
-	void handleTileBodyCollision(Body& b);
+	//void handleTileBodyCollision(Body& b);
 
 	// desc: get collision info for two circles colliding
 	// precond: b1 and b2 are unique
@@ -82,7 +82,7 @@ private:
 
 	bool invalidBodyIndex(int index);
 
-	const Tiles& tilesRef; // aggregation reference to the tiles for the game (the Tiles must outlive lifetime of BodySystem)
+	//const Tiles& tilesRef; // aggregation reference to the tiles for the game (the Tiles must outlive lifetime of BodySystem)
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;
 	std::vector<LineCastResult> debug_lineCasts;

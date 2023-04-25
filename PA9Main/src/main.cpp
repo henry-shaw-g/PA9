@@ -15,6 +15,7 @@
 #include "Tank.h"
 #include "resources/ResourceManager.h"
 #include "TileSystem.h"
+#include "Map.h"
 
 int main(void) {
 	// setup resources
@@ -65,10 +66,10 @@ int main(void) {
 	}
 
 	// test tile system stuff
-	Tiles tiles;
+	//Tiles tiles;
 
 	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
-	BodySystem testBodySystem(tiles);
+	BodySystem testBodySystem;
 	//CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
 	//CircleBody cb2(Vector2f(300, 100), 20);
 	{
@@ -80,8 +81,9 @@ int main(void) {
 
 	// update loop
 
-	Tank player1(50, 100, 16);
-	Tank player2(100, 100, 16);
+	Tank player1(50, 100, 10);
+	Tank player2(100, 100, 10);
+	Map map1;
 	testBodySystem.addBody(player1);
 	testBodySystem.addBody(player2);
 
@@ -123,8 +125,9 @@ int main(void) {
 		// RENDERING
 		{
 			window.clear(sf::Color::White);
+			map1.printMap(window);
 			// draw background layer?
-			window.draw(tiles);
+			//window.draw(tiles);
 			// draw object layer
 			window.draw(player1); // add draw statment for the other tank
 			window.draw(player2);
