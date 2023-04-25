@@ -12,13 +12,11 @@
 #include "../math/Vec2.h"
 #include "Body.h"
 
-typedef unsigned int uint;
-
 // note: not inheriting from body since all this contains is positional data
 class AxisBoxBody : private sf::FloatRect {
 public:
 	// desc: factory that constructs a box body from a tile
-	static AxisBoxBody fromTile(uint col, uint row, float tileW, float tileH);
+	static AxisBoxBody fromTile(int col, int row, float tileW, float tileH);
 
 	// desc: get width of box rect
 	float getWidth() const;

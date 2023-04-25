@@ -120,14 +120,14 @@ void BodySystem::addBody(Body& body)
 	if (!invalidBodyIndex(body.getIndex()))
 		return;
 
-	uint index = dynamicBodies.size();
+	int index = dynamicBodies.size();
 	body.setIndex(index);
 	dynamicBodies.push_back(&body);
 }
 
 void BodySystem::removeBody(Body& body)
 {
-	uint index = body.getIndex();
+	int index = body.getIndex();
 	// make sure we aren't messing up due to a body not actually being in the list
 	if (invalidBodyIndex(index))
 		return; 
@@ -169,7 +169,7 @@ LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
 	return minResult;
 }
 
-bool BodySystem::invalidBodyIndex(uint index) {
+bool BodySystem::invalidBodyIndex(int index) {
 	return index == -1;
 	// todo: possible bounds checking
 }

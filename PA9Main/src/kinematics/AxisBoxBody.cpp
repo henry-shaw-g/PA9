@@ -5,7 +5,7 @@
 
 #include "AxisBoxBody.h"
 
-AxisBoxBody AxisBoxBody::fromTile(uint col, uint row, float tileW, float tileH) {
+AxisBoxBody AxisBoxBody::fromTile(int col, int row, float tileW, float tileH) {
 	AxisBoxBody body;
 	body.left = col * tileW;
 	body.top = row * tileH;

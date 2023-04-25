@@ -78,7 +78,7 @@ private:
 	// desc: get line cast result on an AABB:
 	LineCastResult checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const;
 
-	bool invalidBodyIndex(uint index);
+	bool invalidBodyIndex(int index);
 
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;

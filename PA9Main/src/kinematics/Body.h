@@ -8,8 +8,6 @@
 
 #include "../math/Vec2.h" // Vector2f type and functions
 
-typedef unsigned int uint;
-
 enum class BodyType {
 	Point	= 0,
 	Circle	= 1 << 0,
@@ -19,7 +17,7 @@ enum class BodyType {
 class Body : public sf::Transformable {
 
 private:
-	unsigned int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
+	int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
 
 public:
 
@@ -52,12 +50,12 @@ public:
 	}
 
 	// desc: get list index for body (internal to BodySystem)
-	uint getIndex() {
+	int getIndex() {
 		return index;
 	}
 
 	// desc: set list index for body (internal to BodySystem)
-	void setIndex(uint nIndex) {
+	void setIndex(int nIndex) {
 		index = nIndex;
 	}
 
