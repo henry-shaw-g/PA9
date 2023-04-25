@@ -160,6 +160,7 @@
     <ClInclude Include="src\math\Vec2.h" />
     <ClInclude Include="src\resources\Body.h" />
     <ClInclude Include="src\resources\ResourceManager.h" />
+    <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Tank.h" />
     <ClInclude Include="src\TileSystem.h" />
     <ClInclude Include="src\walls.h" />
