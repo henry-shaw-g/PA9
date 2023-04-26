@@ -68,10 +68,9 @@ const sf::Font& ResourceManager::getFontRef(const string& id) const
 bool ResourceManager::doLoad() {
 	// load textures
 	loadTexture("smiley_face_0", "assets/smiley_face_0.png");
-	loadTexture("tank_blue", "assets/tank_sprites/tank_blue.png");
-	loadTexture("tank", "assets/Tank.png");
 	loadTexture("redTank", "assets/Red Tank.png");
 	loadTexture("blueTank", "assets/Blue Tank.png");
+	loadTexture("bullet", "assets/Bullet.png");
 
 	// load font(s?)
 	loadFont("freecam_font", "assets/fonts/freecam v2.ttf"); // TODO: GET BETTER FONT
