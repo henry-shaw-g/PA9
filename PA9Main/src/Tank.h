@@ -13,6 +13,8 @@ class Tank : public CircleBody, public sf::Drawable {
 
 private:
 
+	int tankType;
+
 	float maxV;
 	float maxAngV;
 	float radians;
@@ -31,7 +33,7 @@ public:
 	Vector2f getRightDir() const;
 
 	// ctor: initialize tank with position and collider radius
-	Tank(float initX, float initY, float radius);
+	Tank(float initX, float initY, float radius, int type);
 
 	// desc: render the tank
 	void draw(sf::RenderTarget& renderTarget, sf::RenderStates _) const override;

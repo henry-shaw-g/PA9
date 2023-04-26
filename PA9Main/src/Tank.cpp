@@ -1,9 +1,10 @@
 #include "Tank.h"
 
-Tank::Tank(float initX, float initY, float radius) : CircleBody(Vector2f(initX, initY), radius) {
+Tank::Tank(float initX, float initY, float radius, int type) : CircleBody(Vector2f(initX, initY), radius) {
 	maxV = 50;
 	maxAngV = 110; // deg / s?
 	radians = 0;
+	tankType = type;
 	setPosition(initX, initY);
 
 	// initialize input
@@ -14,18 +15,25 @@ Tank::Tank(float initX, float initY, float radius) : CircleBody(Vector2f(initX, 
 
 	// setup chassis sprite
 	const sf::Texture& tankTextureRef = ResourceManager::service()
-		.getTextureRef("tank");
-	chassisSprite.setTexture(tankTextureRef);
-	chassisSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
-	// this will all be relative to the tank position / rotation after we do some stuff
-	chassisSprite.setOrigin(radius, radius);
-	chassisSprite.setRotation(0.f);
+		.getTextureRef("blueTank");
 
-	// setup turret sprite
-	turretSprite.setTexture(tankTextureRef);
-	turretSprite.setTextureRect(sf::IntRect(32, 0, 64, 32));
-	turretSprite.setOrigin(radius, radius);
-	turretSprite.setRotation(0.f);
+	const sf::Texture& redTankTexture = ResourceManager::service().getTextureRef("redTank");
+
+	if (tankType == 0) {
+		chassisSprite.setTexture(redTankTexture);
+		chassisSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+		// this will all be relative to the tank position / rotation after we do some stuff
+		chassisSprite.setOrigin(radius, radius);
+		chassisSprite.setRotation(0.f);
+	}
+
+	else if (tankType == 1) {
+		// setup turret sprite
+		chassisSprite.setTexture(tankTextureRef);
+		chassisSprite.setTextureRect(sf::IntRect(0, 0, 32, 32));
+		chassisSprite.setOrigin(radius, radius);
+		chassisSprite.setRotation(0.f);
+	}
 }
 
 

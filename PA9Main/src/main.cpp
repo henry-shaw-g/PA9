@@ -81,8 +81,8 @@ int main(void) {
 
 	// update loop
 
-	Tank player1(50, 100, 10);
-	Tank player2(100, 100, 10);
+	Tank player1(50, 125, 10, 0);
+	Tank player2(430, 125, 10, 1);
 	Map map1;
 	testBodySystem.addBody(player1);
 	testBodySystem.addBody(player2);
