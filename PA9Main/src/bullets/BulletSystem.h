@@ -20,8 +20,14 @@ public:
 	void draw(sf::RenderTarget& renderTarget, sf::RenderStates _) const override;
 
 	// desc: add bullet
-	void addBullet(Vector2f pos, Vector2f vel);
+	void addBullet(Vector2f pos, Vector2f vel, float lifetime);
 private:
 	
+	// desc: utility to remove a bullet at index (performs swap operation)
+	// precond: not empty
+	// note: this will cause elements to be skipped if forward iterating
+	void removeBullet(int index);
+
+	// desc: contains current bullets
 	std::vector<Bullet> bullets;
 };

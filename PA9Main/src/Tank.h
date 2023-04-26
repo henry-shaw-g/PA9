@@ -8,6 +8,7 @@
 #include "math/Vec2.h"
 #include "resources/ResourceManager.h"
 #include "kinematics/CircleBody.h"
+#include "bullets/BulletSystem.h"
 
 class Tank : public CircleBody, public sf::Drawable {
 
@@ -40,13 +41,13 @@ public:
 	void setForward(float input);
 	void setBack(float input);
 	void setLeft(float input);
-	void setRight(float inptu);
+	void setRight(float input);
 
 	// desc: update the tank (handle controls)
 	void update(float dt);
 
 	// desc: fire projectile from tank
-	void shoot(float& xVal, float& yVal);
+	void shoot(BulletSystem& bulletSystem);
 
 private:
 
@@ -60,6 +61,7 @@ private:
 	float backInput;
 	float leftInput;
 	float rightInput;
+	bool fireInput; // true when the shoot key held, poll to get when released
 
 	sf::Sprite chassisSprite;
 	//sf::Sprite turretSprite;

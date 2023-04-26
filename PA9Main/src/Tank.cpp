@@ -46,7 +46,7 @@ void Tank::update(float dt) {
 	float move = forwardInput - backInput;
 	float turn = rightInput - leftInput;
 
-	setVelocity(-getFrontDir() * move * maxV);
+	setVelocity(getFrontDir() * move * maxV);
 	rotate(turn * maxAngV * dt);
 }
 
@@ -54,7 +54,7 @@ Vector2f Tank::getFrontDir() const {
 	const float* matrix = getTransform().getMatrix();
 	// this is like the basis x vector for the rotation of the tank (forward)
 	// its a 4x4 matrix for some reason
-	return Vector2f(matrix[4], matrix[5]);
+	return Vector2f(-matrix[4], -matrix[5]);
 }
 
 Vector2f Tank::getRightDir() const {
@@ -63,14 +63,10 @@ Vector2f Tank::getRightDir() const {
 	return Vector2f(matrix[0], matrix[1]);
 }
 
-void Tank::shoot(float& xVal, float& yVal)
+void Tank::shoot(BulletSystem& bulletSystem) // this is pretty bad coupling, but I wanted to give the tanks more future control over how the bullet is fired
 {
-
-	float orientation = 0.0, radians = 0.0;
-	orientation = getRotation();
-	radians = orientation * (3.14159265359f / 180.0f);
-	xVal = std::cos(radians)* .2;
-	yVal = std::sin(radians)* .2;
+	Vector2f bulletVelocity = Vec2::norm(getFrontDir()) * 100.f;
+	bulletSystem.addBullet(getPosition(), bulletVelocity, 3);
 }
 
 // input setters:

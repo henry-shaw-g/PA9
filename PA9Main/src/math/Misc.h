@@ -29,10 +29,10 @@ namespace math {
 	}
 	
 	inline float toDeg(float rad) {
-		return rad * static_cast<float>(TO_DEG_K) * rad;
+		return rad * static_cast<float>(TO_DEG_K);
 	}
 
 	inline float toRad(float deg) {
-		return deg * static_cast<float>(TO_RAD_K) * deg;
+		return deg * static_cast<float>(TO_RAD_K);
 	}
 }

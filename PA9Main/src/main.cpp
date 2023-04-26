@@ -71,16 +71,16 @@ int main(void) {
 
 	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
 	BodySystem testBodySystem(map1);
-	
 	BulletSystem bulletSystem;
-	bulletSystem.addBullet(Vector2f(100.f, 100.f), Vector2f(20.f, 20.f));
 
 	// update loop
-
 	Tank player1(50, 125, 10, Tank::Type::Red);
 	Tank player2(430, 125, 10, Tank::Type::Blue);
 	testBodySystem.addBody(player1);
 	testBodySystem.addBody(player2);
+
+	bool player1FireInput = sf::Keyboard::isKeyPressed(sf::Keyboard::F);
+	bool player2FireInput = sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
 
 	while (window.isOpen()) {
 		// EVENTS & PROCESS PAUSING
@@ -107,16 +107,15 @@ int main(void) {
 		}
 		// shooting test
 		{
-			float xDir = 0.0, yDir = 0.0;
-			Body shot(player1.getPosition());
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F))
-			{
-				player1.shoot(xDir, yDir);
-				shot.move(xDir, yDir);
-			}
-			
+			bool player1FireInputCurr = sf::Keyboard::isKeyPressed(sf::Keyboard::F);
+			if (player1FireInputCurr && player1FireInputCurr != player1FireInput)
+				player1.shoot(bulletSystem);
+			player1FireInput = player1FireInputCurr;
 
-
+			bool player2FireInputCurr = sf::Keyboard::isKeyPressed(sf::Keyboard::RControl);
+			if (player2FireInputCurr && player2FireInputCurr != player2FireInput)
+				player2.shoot(bulletSystem);
+			player2FireInput = player2FireInputCurr;
 		}
 		// RENDERING
 		{
