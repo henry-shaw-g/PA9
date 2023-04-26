@@ -8,10 +8,16 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
-#include "kinematics/BodySystem.h"
+#include "../kinematics/BodySystem.h"
 
-#include "Scene.h"
-#include "Tank.h"
+#include "../Scene.h"
+#include "../Tank.h"
+
+struct Player {
+public:
+	Tank* tank; // todo: consider smart pointers here
+	int score;
+};
 
 class GameScene : public Scene {
 public:
@@ -27,9 +33,6 @@ public:
 	void draw(sf::RenderTarget& renderTarget) override;
 
 private:
-	Tank p1Tank;
-	int p1Score;
-
-	Tank p2Tank;
-	int p2Score;
+	Player player1;
+	Player player2;
 };
