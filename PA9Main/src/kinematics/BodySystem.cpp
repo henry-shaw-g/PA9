@@ -32,7 +32,10 @@ inline bool fequal(float a, float b) {
 
 BodySystem::BodySystem(Map& systemMap) :
 	mapRef (systemMap)
-{}
+{
+	idRegister = 0; // set id register to start at 0
+
+}
 
 void BodySystem::update(float dt) {
 	// clear last step's collision records
@@ -161,7 +164,9 @@ void BodySystem::addBody(Body& body)
 		return;
 
 	int index = dynamicBodies.size();
+	int id = generateBodyId();
 	body.setIndex(index);
+	body.setId(id);
 	dynamicBodies.push_back(&body);
 }
 
@@ -180,39 +185,13 @@ void BodySystem::removeBody(Body& body)
 	body.setIndex(-1);
 }
 
-LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
-	LineCastResult result, minResult;
-	minResult.t = 2; // t is only valid between 0 and 1 so
-
-	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		Body& b = *dynamicBodies[i];
-		switch (b.getType()) {
-			case BodyType::Circle:
-				result = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
-				break;
-			default:
-				result.intersection = false;
-				break;
-		}
-
-		if (result.intersection && result.t < minResult.t)
-			minResult = result;
-	}
-
-	// TODO: implement checks against the tiles
-	/*result = checkAxisBoxLineCast(testBox, p0, p1);
-	if (result.intersection && result.t < minResult.t)
-		minResult = result;*/
-
-	minResult.p0 = p0;
-	minResult.p1 = p1;
-	debug_lineCasts.push_back(minResult);
-	return minResult;
-}
-
 bool BodySystem::invalidBodyIndex(int index) {
 	return index == -1;
 	// todo: possible bounds checking
+}
+
+int BodySystem::generateBodyId() {
+	return idRegister++; // return current id and then increment it for next usage (gives us ~2^31 - 1 unique instances for a session) (could get more if we used unsigned)
 }
 
 void BodySystem::debug_drawBodies(sf::RenderTarget& renderTarget) {
@@ -240,6 +219,36 @@ void BodySystem::debug_drawLineCasts(sf::RenderTarget& renderTarget) {
 		debug_lineCasts.pop_back();
 		result.debug_draw(renderTarget);
 	}
+}
+
+LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
+	LineCastResult result, minResult;
+	minResult.t = 2; // t is only valid between 0 and 1 so
+
+	for (int i = 0; i < dynamicBodies.size(); ++i) {
+		Body& b = *dynamicBodies[i];
+		switch (b.getType()) {
+		case BodyType::Circle:
+			result = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
+			break;
+		default:
+			result.intersection = false;
+			break;
+		}
+
+		if (result.intersection && result.t < minResult.t)
+			minResult = result;
+	}
+
+	// TODO: implement checks against the tiles
+	/*result = checkAxisBoxLineCast(testBox, p0, p1);
+	if (result.intersection && result.t < minResult.t)
+		minResult = result;*/
+
+	minResult.p0 = p0;
+	minResult.p1 = p1;
+	debug_lineCasts.push_back(minResult);
+	return minResult;
 }
 
 CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2) {
@@ -357,7 +366,7 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 	return result;
 }
 
-// desc: controlls the movement for all objects on the board'
+// desc: controls the movement for all objects on the board'
 // consider moving this out of BodySystem (probably belongs in the update loop of a game wrapper)
 void BodySystem::moveObjects(Tank& player1, Tank& player2, float dt) {
 	using sf::Keyboard;

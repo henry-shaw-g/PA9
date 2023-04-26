@@ -18,7 +18,7 @@ class Body : public sf::Transformable {
 
 private:
 	int index; // index of the body in the list it resides in? (needs to be accessible from both the users and the body sytem)
-
+	int id; // 'unique' identifier for the body (only to the body system it is currently in)
 public:
 
 	// moved these to public for ease of use
@@ -30,6 +30,7 @@ public:
 	{
 		setPosition(pos);
 		index = -1;
+		id = -1;
 	}
 
 	Body(float xPos, float yPos) :
@@ -50,13 +51,23 @@ public:
 	}
 
 	// desc: get list index for body (internal to BodySystem)
-	int getIndex() {
+	int getIndex() const {
 		return index;
 	}
 
 	// desc: set list index for body (internal to BodySystem)
 	void setIndex(int nIndex) {
 		index = nIndex;
+	}
+
+	// desc: getter for id (intended to be used publically)
+	int getId() const {
+		return id;
+	}
+	
+	// desc: setter for id (should only be used internally by BodySystem)
+	void setId(int newId) {
+		id = newId;
 	}
 
 	// desc: get the minimum(ish) bounding box of the the given body

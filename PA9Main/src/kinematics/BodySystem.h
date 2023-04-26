@@ -80,10 +80,13 @@ private:
 	// desc: get line cast result on an AABB:
 	LineCastResult checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const;
 
+	int generateBodyId();
+
 	bool invalidBodyIndex(int index);
 
 	Map& mapRef; // aggregation reference to the tiles for the game (the Tiles must outlive lifetime of BodySystem)
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;
 	std::vector<LineCastResult> debug_lineCasts;
+	int idRegister; // counter which we will use to assign 'ids' to the bodies (not, consider -1 invalid / unregistered)
 };
