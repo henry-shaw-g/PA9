@@ -30,7 +30,9 @@ inline bool fequal(float a, float b) {
 
 /* BODY SYSTEM */
 
-BodySystem::BodySystem() {}
+BodySystem::BodySystem(Map& systemMap) :
+	mapRef (systemMap)
+{}
 
 void BodySystem::update(float dt) {
 	// clear last step's collision records
@@ -43,7 +45,7 @@ void BodySystem::update(float dt) {
 	updateBodyCollisions();
 
 	// detect and resolve dynamic-static(tiles) collisions
-	//updateTileCollisions();
+	updateTileCollisions();
 }
 
 void BodySystem::integrateBodies(float dt) {
@@ -99,59 +101,58 @@ void BodySystem::updateBodyCollisions() {
 void BodySystem::updateTileCollisions() {
 	CollisionResult result;
 	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		//handleTileBodyCollision(*dynamicBodies[i]);
+		handleTileBodyCollision(*dynamicBodies[i]);
 	}
 }
 
-//void BodySystem::handleTileBodyCollision(Body& b)
-//{
-//	// get the maximum AABB of the body
-//	sf::FloatRect aabb = b.getAABB();
-//	// get the maximum rect of coordinates containing the AABB
-//	Vector2f tileSize = tilesRef.getTileSize();
-//	float x0 = std::floor(aabb.left / tileSize.x);
-//	float x1 = std::ceil((aabb.left + aabb.width) / tileSize.x);
-//	float y0 = std::floor(aabb.top / tileSize.y);
-//	float y1 = std::ceil((aabb.top + aabb.height) / tileSize.y);
-//		
-//	// limit the rect to be in the tile system grid
-//	Vector2u gridSize = tilesRef.getGridSize();
-//	int col0 = math::clamp((int)x0 - 1, 
-//		0, (int)gridSize.x - 1); // 0u literal needed so the template func knows what the args are
-//	int col1 = math::clamp((int)x1, 
-//		0, (int)gridSize.x - 1);
-//	int row0 = math::clamp((int)y0 - 1, 
-//		0, (int)gridSize.y - 1);
-//	int row1 = math::clamp((int)y1, 
-//		0, (int)gridSize.y -1);
-//
-//	// go through each tile and check / resolve collision w/ body
-//	BodyType bodyType = b.getType();
-//	AxisBoxBody tileBody;
-//	CollisionResult result;
-//	int row, col;
-//	for (row = row0; row <= row1; ++row) {
-//		
-//		for (col = col0; col <= col1; ++col) {
-//			tilesRef.getTile(col, row).debug_setVisited(true);
-//			if (!tilesRef.canTileCollide(col, row))
-//				continue;
-//			tileBody = AxisBoxBody::fromTile(col, row, tileSize.x, tileSize.y);
-//			switch (bodyType) {
-//				case BodyType::Circle:
-//					result = checkCircleAxisBoxCollide(static_cast<CircleBody&>(b), tileBody);
-//					break;
-//				default:
-//					result.collided = false;
-//			}
-//			if (result.collided) {
-//				b.resolveCollision(result.offset);
-//				debug_collisions.push_back(result);
-//			}
-//		}
-//
-//	}
-//}
+void BodySystem::handleTileBodyCollision(Body& b)
+{
+	// get the maximum AABB of the body
+	sf::FloatRect aabb = b.getAABB();
+	// get the maximum rect of coordinates containing the AABB
+	Vector2f tileSize = mapRef.tileSize();
+	float x0 = std::floor(aabb.left / tileSize.x);
+	float x1 = std::ceil((aabb.left + aabb.width) / tileSize.x);
+	float y0 = std::floor(aabb.top / tileSize.y);
+	float y1 = std::ceil((aabb.top + aabb.height) / tileSize.y);
+		
+	// limit the rect to be in the tile system grid
+	Vector2u gridSize = mapRef.mapSize();
+	int col0 = math::clamp((int)x0 - 1, 
+		0, (int)gridSize.x - 1); // 0u literal needed so the template func knows what the args are
+	int col1 = math::clamp((int)x1, 
+		0, (int)gridSize.x - 1);
+	int row0 = math::clamp((int)y0 - 1, 
+		0, (int)gridSize.y - 1);
+	int row1 = math::clamp((int)y1, 
+		0, (int)gridSize.y -1);
+
+	// go through each tile and check / resolve collision w/ body
+	BodyType bodyType = b.getType();
+	AxisBoxBody tileBody;
+	CollisionResult result;
+	int row, col;
+	for (row = row0; row <= row1; ++row) {
+		
+		for (col = col0; col <= col1; ++col) {
+			if (!mapRef.getTile(col, row).isWall())
+				continue;
+			tileBody = AxisBoxBody::fromTile(col, row, tileSize.x, tileSize.y);
+			switch (bodyType) {
+				case BodyType::Circle:
+					result = checkCircleAxisBoxCollide(static_cast<CircleBody&>(b), tileBody);
+					break;
+				default:
+					result.collided = false;
+			}
+			if (result.collided) {
+				b.resolveCollision(result.offset);
+				debug_collisions.push_back(result);
+			}
+		}
+
+	}
+}
 
 void BodySystem::addBody(Body& body)
 {

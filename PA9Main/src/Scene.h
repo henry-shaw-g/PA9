@@ -12,10 +12,10 @@
 
 class Scene {
 public:
-	virtual void init() = 0;
+	virtual void init() = 0; // unity convention
 
 	virtual void update(float dt) = 0;
 
-	virtual void draw(sf::RenderTarget renderTarget) = 0;
+	virtual void draw(sf::RenderTarget& renderTarget) = 0;
 protected:
 };

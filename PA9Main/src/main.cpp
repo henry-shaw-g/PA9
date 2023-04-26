@@ -66,9 +66,10 @@ int main(void) {
 
 	// test tile system stuff
 	//Tiles tiles;
+	Map map1;
 
 	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
-	BodySystem testBodySystem;
+	BodySystem testBodySystem(map1);
 	//CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
 	//CircleBody cb2(Vector2f(300, 100), 20);
 	{
@@ -82,7 +83,6 @@ int main(void) {
 
 	Tank player1(50, 125, 10, 0);
 	Tank player2(430, 125, 10, 1);
-	Map map1;
 	testBodySystem.addBody(player1);
 	testBodySystem.addBody(player2);
 
@@ -131,7 +131,7 @@ int main(void) {
 			window.draw(player1); // add draw statment for the other tank
 			window.draw(player2);
 			// draw debug layer
-			testBodySystem.debug_drawBodies(window);
+			//testBodySystem.debug_drawBodies(window);
 			testBodySystem.debug_drawCollisions(window);
 			// draw ui layer
 			window.draw(fpsTextObj);
