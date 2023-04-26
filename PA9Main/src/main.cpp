@@ -12,6 +12,7 @@
 #include "kinematics/Body.h"
 #include "kinematics/CircleBody.h"
 #include "kinematics/BodySystem.h"
+#include "bullets/BulletSystem.h"
 #include "Tank.h"
 #include "resources/ResourceManager.h"
 #include "Map.h"
@@ -70,14 +71,9 @@ int main(void) {
 
 	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
 	BodySystem testBodySystem(map1);
-	//CircleBody cb1(Vector2f(0, 100), 20); // note: the life times of these guys need to extend beyond the body class
-	//CircleBody cb2(Vector2f(300, 100), 20);
-	{
-		//testBodySystem.addBody(cb1);
-		//testBodySystem.addBody(cb2);
-		//cb1.setVelocity(Vector2f(0, 0)); // 5 unit pixels / sec idk
-		//cb2.setVelocity(Vector2f(0, 0));
-	}
+	
+	BulletSystem bulletSystem;
+	bulletSystem.addBullet(Vector2f(100.f, 100.f), Vector2f(20.f, 20.f));
 
 	// update loop
 
@@ -104,9 +100,10 @@ int main(void) {
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
 			testBodySystem.moveObjects(player1, player2, dt); // change this to a body systems or independant function
-
 			// update kinematics
 			testBodySystem.update(dt);	
+			// update bullets
+			bulletSystem.update(dt);
 		}
 		// shooting test
 		{
@@ -123,6 +120,7 @@ int main(void) {
 		}
 		// RENDERING
 		{
+			
 			window.clear(sf::Color::White);
 			map1.printMap(window);
 			// draw background layer?
@@ -130,6 +128,7 @@ int main(void) {
 			// draw object layer
 			window.draw(player1); // add draw statment for the other tank
 			window.draw(player2);
+			window.draw(bulletSystem);
 			// draw debug layer
 			//testBodySystem.debug_drawBodies(window);
 			testBodySystem.debug_drawCollisions(window);

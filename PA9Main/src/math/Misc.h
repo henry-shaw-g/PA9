@@ -9,7 +9,7 @@
 
 namespace math {
 
-	const double PI = std::atan2(-1, 0);
+	const double PI = std::atan2(0, -1);
 	const double TO_RAD_K = PI / 180;
 	const double TO_DEG_K = 180 / PI;
 
@@ -29,10 +29,10 @@ namespace math {
 	}
 	
 	inline float toDeg(float rad) {
-		return rad * static_cast<float>(TO_DEG_K);
+		return rad * static_cast<float>(TO_DEG_K) * rad;
 	}
 
 	inline float toRad(float deg) {
-		return deg * static_cast<float>(TO_RAD_K);
+		return deg * static_cast<float>(TO_RAD_K) * deg;
 	}
 }
