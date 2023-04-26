@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Tilesystem.h"
+#include "Tile.h"
 
 class Map {
 

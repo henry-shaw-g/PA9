@@ -14,7 +14,6 @@
 #include "kinematics/BodySystem.h"
 #include "Tank.h"
 #include "resources/ResourceManager.h"
-#include "TileSystem.h"
 #include "Map.h"
 
 int main(void) {

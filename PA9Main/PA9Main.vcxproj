@@ -144,7 +144,7 @@
     <ClCompile Include="src\Tank.cpp" />
     <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
-    <ClCompile Include="src\TileSystem.cpp" />
+    <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bullet.h" />
@@ -165,7 +165,7 @@
     <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Tank.h" />
-    <ClInclude Include="src\TileSystem.h" />
+    <ClInclude Include="src\Tile.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="assets\smiley_face_0.png" />
