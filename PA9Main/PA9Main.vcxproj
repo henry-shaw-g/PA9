@@ -153,8 +153,6 @@
     <ClInclude Include="src\bullets\BulletSystem.h" />
     <ClInclude Include="src\GameConfig.h" />
     <ClInclude Include="src\game\GameScene.h" />
-    <ClInclude Include="src\gui\GuiContainer.h" />
-    <ClInclude Include="src\gui\GuiView.h" />
     <ClInclude Include="src\kinematics\AxisBoxBody.h" />
     <ClInclude Include="src\kinematics\CircleBody.h" />
     <ClInclude Include="src\kinematics\BodySystem.h" />
