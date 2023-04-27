@@ -14,7 +14,7 @@ Map::Map() {
 }
 
 //desc: goes through the tiles to check if there is a wall on it
-void Map::printMap(sf::RenderWindow& window) {
+void Map::printMap(sf::RenderTarget& renderTarget) {
 	
 	for (int column = 0; column < 32; ++column) {
 		for (int row = 0; row < 18; ++row) {
@@ -24,7 +24,7 @@ void Map::printMap(sf::RenderWindow& window) {
 				sf::RectangleShape newWall(Vector2f(15, 15));
 				newWall.setFillColor(sf::Color::Black);
 				newWall.setPosition(playSpace[column][row].getUpperBound());
-				window.draw(newWall);
+				renderTarget.draw(newWall);
 			}
 
 		}

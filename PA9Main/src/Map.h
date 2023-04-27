@@ -27,7 +27,7 @@ public:
 	Map();
 
 	//desc: goes through the tiles to check if there is a wall on it
-	void printMap(sf::RenderWindow& window);
+	void printMap(sf::RenderTarget& renderTarget);
 
 	Vector2u mapSize() {
 		return Vector2u(32, 18);
