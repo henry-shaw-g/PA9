@@ -20,11 +20,11 @@
 #include "tests/TestMain.h"
 
 void updateTanks(Tank& tank1, Tank& tank2, float dt);
-#if 1
-int main() {
-	Tests::run();
-}
-#else
+//#if 1
+//int main() {
+//	Tests::run();
+//}
+//#else
 int main(void) {
 	// setup resources
 	ResourceManager::load();
@@ -148,7 +148,7 @@ int main(void) {
 		}
 	}
 }
-#endif
+//#endif
 void updateTanks(Tank& tank1, Tank& tank2, float dt) {
 	using sf::Keyboard;
 	/* PLAYER 1 */

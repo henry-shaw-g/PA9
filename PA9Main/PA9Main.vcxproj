@@ -146,6 +146,7 @@
     <ClCompile Include="src\Tank.cpp" />
     <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
+    <ClCompile Include="src\tests\Test.cpp" />
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Tank.h" />
+    <ClInclude Include="src\tests\Test.h" />
     <ClInclude Include="src\tests\TestKinematics.h" />
     <ClInclude Include="src\tests\TestMain.h" />
     <ClInclude Include="src\Tile.h" />
