@@ -10,7 +10,7 @@ Map::Map() {
 		}
 	}
 
-	assignWalls();
+	emptyMap();
 }
 
 //desc: goes through the tiles to check if there is a wall on it
@@ -32,25 +32,25 @@ void Map::printMap(sf::RenderWindow& window) {
 }
 
 //desc: assigns a wall to the current tile
-void Map::assignWalls() {
+void Map::loadMap1(Map& map) {
+	map.emptyMap();
 
 	for (int horizon = 0; horizon < 8; ++horizon) {
-		playSpace[2 + horizon][3].setWall();
-		playSpace[2 + horizon][14].setWall();
-		playSpace[22 + horizon][3].setWall();
-		playSpace[22 + horizon][14].setWall();
+		map.getTile(2 + horizon,3).setWall();
+		map.getTile(2 + horizon,14).setWall();
+		map.getTile(22 + horizon,3).setWall();
+		map.getTile(22 + horizon,14).setWall();
 	}
 
 	for (int vert = 0; vert < 6; ++vert) {
-		playSpace[10][6 + vert].setWall();
-		playSpace[21][6 + vert].setWall();
+		map.getTile(10, 6 + vert).setWall();
+		map.getTile(21, 6 + vert).setWall();
 	}
 
 	for (int vert = 0; vert < 4; ++vert) {
-		playSpace[15][3 + vert].setWall();
-		playSpace[16][3 + vert].setWall();
-		playSpace[15][11 + vert].setWall();
-		playSpace[16][11 + vert].setWall();
-		
+		map.getTile(15, 3 + vert).setWall();
+		map.getTile(16, 3 + vert).setWall();
+		map.getTile(15, 11 + vert).setWall();
+		map.getTile(16, 11 + vert).setWall();
 	}
 }

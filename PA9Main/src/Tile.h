@@ -36,6 +36,10 @@ public:
 
 	void assignBounds(int column, int row);
 
+	void setEmpty() {
+		wall = false;
+	}
+
 	void setWall() {
 		wall = true;
 	} 

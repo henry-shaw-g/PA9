@@ -8,10 +8,20 @@ private:
 
 	Tile playSpace[32][18];
 
-	//desc: assigns a wall to the current tile
-	void assignWalls();
+	// desc: set map to empty
+	void emptyMap() {
+		int row, col;
 
+		for (col = 0; col < 32; ++col) {
+			for (row = 0; row < 18; ++row) {
+				playSpace[col][row].setEmpty();
+			}
+		}
+	}
 public:
+
+	// desc: map 1
+	static void loadMap1(Map& map);
 
 	//desc: default constructor
 	Map();
