@@ -1,11 +1,11 @@
 #include "Tank.h"
 
-Tank::Tank(float initX, float initY, float radius, Tank::Type type) : CircleBody(Vector2f(initX, initY), radius) {
+Tank::Tank(Vector2f pos, float radius, Tank::Type type) : CircleBody(pos, radius) {
 	tankType = type;
 	maxV = 50;
 	maxAngV = 110; // deg / s?
 	radians = 0;
-	setPosition(initX, initY);
+	setPosition(pos);
 
 	// initialize input
 	forwardInput = 0;
@@ -54,13 +54,13 @@ Vector2f Tank::getFrontDir() const {
 	const float* matrix = getTransform().getMatrix();
 	// this is like the basis x vector for the rotation of the tank (forward)
 	// its a 4x4 matrix for some reason
-	return Vector2f(-matrix[4], -matrix[5]);
+	return Vec2::norm(Vector2f(-matrix[4], -matrix[5]));
 }
 
 Vector2f Tank::getRightDir() const {
 	const float* matrix = getTransform().getMatrix();
 	// this is the basis y vector for the rotation of the tank (right?)
-	return Vector2f(matrix[0], matrix[1]);
+	return Vec2::norm(Vector2f(matrix[0], matrix[1]));
 }
 
 void Tank::shoot(BulletSystem& bulletSystem) // this is pretty bad coupling, but I wanted to give the tanks more future control over how the bullet is fired

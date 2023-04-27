@@ -24,7 +24,7 @@ public:
 	Vector2f getRightDir() const;
 
 	// ctor: initialize tank with position and collider radius
-	Tank(float initX, float initY, float radius, Tank::Type type);
+	Tank(Vector2f pos, float radius, Tank::Type type);
 
 	// desc: render the tank
 	void draw(sf::RenderTarget& renderTarget, sf::RenderStates _) const override;
