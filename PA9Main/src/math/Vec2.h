@@ -11,6 +11,7 @@
 #include "SFML/System.hpp"
 using sf::Vector2f; // my poor fingies (note: this in header scope so will be usable in all including files)
 using sf::Vector2u;
+using sf::Vector2i;
 
 namespace Vec2 {
 	// func: mag()
