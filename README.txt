@@ -1,7 +1,7 @@
 ** PA9 SUBMISSION README **
 FOR ANDY:
 > Team Members: Chase Larkin, Henry Shaw, Korbin Weiller
-> Video Link:
+> Video Link: https://drive.google.com/file/d/1foV6BJW-wQiNtOsHQ5fUhXywUWHvyUQY/view?usp=share_link
 
 GAME INFORMATION
 
