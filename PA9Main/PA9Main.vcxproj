@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -135,7 +135,48 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\bullets\Bullet.cpp" />
+    <ClCompile Include="src\bullets\BulletSystem.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\kinematics\AxisBoxBody.cpp" />
+    <ClCompile Include="src\kinematics\BodySystem.cpp" />
+    <ClCompile Include="src\kinematics\CircleBody.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Map.cpp" />
+    <ClCompile Include="src\Tank.cpp" />
+    <ClCompile Include="src\math\Vec2.cpp" />
+    <ClCompile Include="src\resources\ResourceManager.cpp" />
+    <ClCompile Include="src\tests\TestWalls.h" />
+    <ClCompile Include="src\Tile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\bullets\Bullet.h" />
+    <ClInclude Include="src\bullets\BulletSystem.h" />
+    <ClInclude Include="src\GameConfig.h" />
+    <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\kinematics\AxisBoxBody.h" />
+    <ClInclude Include="src\kinematics\CircleBody.h" />
+    <ClInclude Include="src\kinematics\BodySystem.h" />
+    <ClInclude Include="src\kinematics\Body.h" />
+    <ClInclude Include="src\kinematics\CollisionResult.h" />
+    <ClInclude Include="src\kinematics\LineCastResult.h" />
+    <ClInclude Include="src\Map.h" />
+    <ClInclude Include="src\math\Misc.h" />
+    <ClInclude Include="src\math\Vec2.h" />
+    <ClInclude Include="src\resources\Body.h" />
+    <ClInclude Include="src\resources\ResourceManager.h" />
+    <ClInclude Include="src\Scene.h" />
+    <ClInclude Include="src\Tank.h" />
+    <ClInclude Include="src\tests\TestKinematics.h" />
+    <ClInclude Include="src\tests\TestMain.h" />
+    <ClInclude Include="src\Tile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="assets\smiley_face_0.png" />
+    <Image Include="assets\tank_sprites\tank_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="assets\fonts\freecam v2.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
