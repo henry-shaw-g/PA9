@@ -146,6 +146,7 @@
     <ClCompile Include="src\Tank.cpp" />
     <ClCompile Include="src\math\Vec2.cpp" />
     <ClCompile Include="src\resources\ResourceManager.cpp" />
+    <ClCompile Include="src\tests\TestWalls.h" />
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
