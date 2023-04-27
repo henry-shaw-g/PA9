@@ -149,7 +149,6 @@
     <ClCompile Include="src\Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bullet.h" />
     <ClInclude Include="src\bullets\Bullet.h" />
     <ClInclude Include="src\bullets\BulletSystem.h" />
     <ClInclude Include="src\GameConfig.h" />
