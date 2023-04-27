@@ -14,7 +14,8 @@
 namespace Tests {
 	class Kinematics {
 		public:
-			void testLineCast() {
+			void testLineCastWithTiles() {
+				std::cout << "TEST: line cast with tiles:\n";
 				std::unique_ptr<Map> map = std::make_unique<Map>();
 				map->getTile(1, 1).setWall();
 				BodySystem bodySystem(*map);
@@ -32,5 +33,20 @@ namespace Tests {
 				std::cout << "tile hit: col: " << (result.tileResult.col) << ", row: " << (result.tileResult.row) << '\n';
 				std::cout << "normal:" << result.data.normal << '\n';
  			}
+
+			void testLineCastWithBodies() {
+				std::cout << "TEST: line cast with bodies:\n";
+				std::unique_ptr<Map> map = std::make_unique<Map>();
+				BodySystem bodySystem(*map);
+				LineCastResult result;
+				CircleBody body(Vector2f(20, 20), 5);
+				bodySystem.addBody(body);
+
+				result = bodySystem.lineCast(Vector2f(0, 0), Vector2f(20, 20));
+				std::cout << "intersecton?: " << result.intersected() << '\n';
+				std::cout << "is body type?: " << (result.type == LineCastResult::Body) << '\n';
+				std::cout << "pos: " << (result.data.point) << '\n';
+
+			}
 	};
 }

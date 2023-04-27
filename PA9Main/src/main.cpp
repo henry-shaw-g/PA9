@@ -20,7 +20,7 @@
 #include "tests/TestMain.h"
 
 void updateTanks(Tank& tank1, Tank& tank2, float dt);
-#if 1
+#if 0
 int main() {
 	Tests::run();
 }

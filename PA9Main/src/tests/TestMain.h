@@ -10,6 +10,7 @@
 namespace Tests {
 	inline void run() {
 		Tests::Kinematics kinematicsTest;
-		kinematicsTest.testLineCast();
+		kinematicsTest.testLineCastWithTiles();
+		kinematicsTest.testLineCastWithBodies();
 	}
 }
