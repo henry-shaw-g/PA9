@@ -137,7 +137,7 @@
   <ItemGroup>
     <ClCompile Include="src\bullets\Bullet.cpp" />
     <ClCompile Include="src\bullets\BulletSystem.cpp" />
-    <ClCompile Include="src\game\GameScene.cpp" />
+    <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\kinematics\AxisBoxBody.cpp" />
     <ClCompile Include="src\kinematics\BodySystem.cpp" />
     <ClCompile Include="src\kinematics\CircleBody.cpp" />
@@ -153,7 +153,7 @@
     <ClInclude Include="src\bullets\Bullet.h" />
     <ClInclude Include="src\bullets\BulletSystem.h" />
     <ClInclude Include="src\GameConfig.h" />
-    <ClInclude Include="src\game\GameScene.h" />
+    <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\kinematics\AxisBoxBody.h" />
     <ClInclude Include="src\kinematics\CircleBody.h" />
     <ClInclude Include="src\kinematics\BodySystem.h" />
