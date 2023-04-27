@@ -1,5 +1,6 @@
 /*
 	file: BulletSystem.cpp
+	desc: implements the bullet system
 */
 #include "BulletSystem.h"
 
@@ -7,6 +8,7 @@ BulletSystem::BulletSystem(BodySystem& bodySystem) :
 	bodySystemRef(bodySystem) {}
 
 void BulletSystem::update(float dt) {
+	BulletEvent event;
 	Vector2f p0, p1;
 	LineCastResult castResult;
 	bool expired = false;
@@ -20,14 +22,16 @@ void BulletSystem::update(float dt) {
 		}
 		// check collisions
 		castResult = bodySystemRef.lineCast(p0, p1);
-		if (castResult.intersected()) {
-			if (castResult.type == LineCastResult::Tile) {
-				bounceBullet(bullet, castResult.data.point, castResult.data.normal);
-			}
-			else
-			{
-				removeBullet(i);
-			}
+		if (castResult.type == LineCastResult::Tile) {
+			bounceBullet(bullet, castResult.data.point, castResult.data.normal);
+		}
+		else if (castResult.type == LineCastResult::Body) {
+			removeBullet(i);
+			event.type = BulletEvent::HitBody;
+			event.hitBody.bodyId = castResult.bodyResult.id;
+			event.hitBody.pos = castResult.data.point;
+			event.hitBody.norm = castResult.data.normal;
+			events.push(event);
 		}
 	}
 }
@@ -35,6 +39,17 @@ void BulletSystem::update(float dt) {
 void BulletSystem::draw(sf::RenderTarget& renderTarget, sf::RenderStates _) const {
 	for (auto& bullet : bullets) {
 		renderTarget.draw(bullet);
+	}
+}
+
+bool BulletSystem::pollEvent(BulletEvent& event) {
+	if (events.empty()) {
+		return false;
+	}
+	else {
+		event = events.front();
+		events.pop();
+		return true;
 	}
 }
 
