@@ -169,6 +169,8 @@
     <ClInclude Include="src\resources\ResourceManager.h" />
     <ClInclude Include="src\Scene.h" />
     <ClInclude Include="src\Tank.h" />
+    <ClInclude Include="src\tests\TestKinematics.h" />
+    <ClInclude Include="src\tests\TestMain.h" />
     <ClInclude Include="src\Tile.h" />
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,14 @@
 #include "resources/ResourceManager.h"
 #include "Map.h"
 
+#include "tests/TestMain.h"
+
+void updateTanks(Tank& tank1, Tank& tank2, float dt);
+#if 1
+int main() {
+	Tests::run();
+}
+#else
 int main(void) {
 	// setup resources
 	ResourceManager::load();
@@ -68,10 +76,11 @@ int main(void) {
 	// test tile system stuff
 	//Tiles tiles;
 	Map map1;
+	Map::loadMap1(map1);
 
 	// test body system stuff, note: body system will HAVE to be constructed after the tiles.
 	BodySystem testBodySystem(map1);
-	BulletSystem bulletSystem;
+	BulletSystem bulletSystem(testBodySystem);
 
 	// update loop
 	Tank player1(50, 125, 10, Tank::Type::Red);
@@ -99,8 +108,9 @@ int main(void) {
 			fpsStrStream << std::fixed << std::setprecision(0) << fps;
 			fpsTextObj.setString(fpsStrStream.str());
 			// update tank
-			testBodySystem.moveObjects(player1, player2, dt); // change this to a body systems or independant function
-			// update kinematics
+			updateTanks(player1, player2, dt);
+
+			//pdate kinematics
 			testBodySystem.update(dt);	
 			// update bullets
 			bulletSystem.update(dt);
@@ -137,4 +147,20 @@ int main(void) {
 			window.display(); // this should probably be called last
 		}
 	}
+}
+#endif
+void updateTanks(Tank& tank1, Tank& tank2, float dt) {
+	using sf::Keyboard;
+	/* PLAYER 1 */
+	tank1.setForward(Keyboard::isKeyPressed(Keyboard::W)); // note: the boolean gets casted to a float as 0f or 1f
+	tank1.setBack(Keyboard::isKeyPressed(Keyboard::S));
+	tank1.setLeft(Keyboard::isKeyPressed(Keyboard::A));
+	tank1.setRight(Keyboard::isKeyPressed(Keyboard::D));
+	tank1.update(dt);
+	/* PLAYER 2*/
+	tank2.setForward(Keyboard::isKeyPressed(Keyboard::Up)); // note: the boolean gets casted to a float as 0f or 1f
+	tank2.setBack(Keyboard::isKeyPressed(Keyboard::Down));
+	tank2.setLeft(Keyboard::isKeyPressed(Keyboard::Left));
+	tank2.setRight(Keyboard::isKeyPressed(Keyboard::Right));
+	tank2.update(dt);
 }
