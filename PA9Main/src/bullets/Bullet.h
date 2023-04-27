@@ -22,6 +22,9 @@ public:
 
 	// desc: set the bullet velocity (also updats the sprite transform)
 	void setVelocity(Vector2f vel);
+
+	// desc: get velocity
+	Vector2f getVelocity() const;
 private:
 
 	Vector2f velocity;

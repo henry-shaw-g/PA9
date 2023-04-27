@@ -230,26 +230,28 @@ LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
 	// check against bodies
 	{
 		int minBodyId = -1;
-		for (int i = 0; i < dynamicBodies.size(); ++i) {
-			Body& b = *dynamicBodies[i];
-			switch (b.getType()) {
+		for (auto& b : dynamicBodies) {
+			switch (b->getType()) {
 			case BodyType::Circle:
-				castData = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
+				castData = checkCircleLineCast(static_cast<CircleBody&>(*b), p0, p1);
 				break;
 			default:
 				castData.t = NO_INTERSECT;
 				break;
 			}
 
-			if (castData.t < minCastData.t) {
+			if (castData.intersected() && castData.t < minCastData.t) {
 				minCastData = castData;
-				minBodyId = b.getId();
+				minBodyId = b->getId();
 			}
 		}
 		if (minCastData.intersected()) {
 			result.type = LineCastResult::Body;
 			result.data = minCastData;
 			result.bodyResult.id = minBodyId;
+		}
+		else {
+			minCastData.t = NO_INTERSECT;
 		}
 	}
 
@@ -421,7 +423,6 @@ LineCastData BodySystem::checkTilesLineCast(Vector2f p0, Vector2f p1, Vector2i& 
 	Vector2f stepNorm;
 	bool inWall = false;
 	while (sLast <= 1 && !inWall) {
-		std::cout << "col: " << posT.x << ", row: " << posT.y << '\n';
 		if (s.x < s.y) {
 			posT.x += stepT.x;
 			sLast = s.x;

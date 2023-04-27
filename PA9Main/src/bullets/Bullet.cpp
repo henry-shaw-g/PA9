@@ -31,3 +31,8 @@ void Bullet::setVelocity(Vector2f vel) {
 	float deg = math::toDeg(rad);
 	setRotation(deg);
 }
+
+Vector2f Bullet::getVelocity() const
+{
+	return velocity;
+}
