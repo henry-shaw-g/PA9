@@ -5,14 +5,17 @@
 
 #include <cmath>
 #include <algorithm>
+#include <limits>
 
 #include "SFML/System.hpp"
 
+#include "../math/Vec2.h"
 #include "../math/Misc.h"
 #include "BodySystem.h"
 
-static const float FCOMPARE_EPSILON = 0.0001; // might need this to be smaller
-static const float PUSHBACK_EPSILON = 0.01; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
+static const float FCOMPARE_EPSILON = 0.0001f; // might need this to be smaller
+static const float PUSHBACK_EPSILON = 0.01f; // an extra nudge so floating point doesn't think the colliders are still colliding (may be unstable?)
+static const float NO_INTERSECT = 2.0f;
 
 /* UTILITY */
 
@@ -208,47 +211,61 @@ void BodySystem::debug_drawCollisions(sf::RenderTarget& renderTarget) {
 		debug_collisions.pop_back();
 		result.debug_draw(renderTarget);
 	}
-	// jic:
-	//debug_collisions.clear();
 }
 
 void BodySystem::debug_drawLineCasts(sf::RenderTarget& renderTarget) {
-	LineCastResult result;
 	while (!debug_lineCasts.empty()) {
-		result = debug_lineCasts.back();
+		LineCastData& instance = debug_lineCasts.back();
 		debug_lineCasts.pop_back();
-		result.debug_draw(renderTarget);
+		instance.debug_draw(renderTarget);
 	}
 }
 
 LineCastResult BodySystem::lineCast(Vector2f p0, Vector2f p1) {
-	LineCastResult result, minResult;
-	minResult.t = 2; // t is only valid between 0 and 1 so
+	LineCastData castData, minCastData;
+	minCastData.t = NO_INTERSECT; // 1 is maximum value we consider so
+	LineCastResult result;
+	result.type = LineCastResult::None;
+	
+	// check against bodies
+	{
+		int minBodyId = -1;
+		for (int i = 0; i < dynamicBodies.size(); ++i) {
+			Body& b = *dynamicBodies[i];
+			switch (b.getType()) {
+			case BodyType::Circle:
+				castData = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
+				break;
+			default:
+				castData.t = NO_INTERSECT;
+				break;
+			}
 
-	for (int i = 0; i < dynamicBodies.size(); ++i) {
-		Body& b = *dynamicBodies[i];
-		switch (b.getType()) {
-		case BodyType::Circle:
-			result = checkCircleLineCast(static_cast<CircleBody&>(b), p0, p1);
-			break;
-		default:
-			result.intersection = false;
-			break;
+			if (castData.t < minCastData.t) {
+				minCastData = castData;
+				minBodyId = b.getId();
+			}
 		}
-
-		if (result.intersection && result.t < minResult.t)
-			minResult = result;
+		if (minCastData.intersected()) {
+			result.type = LineCastResult::Body;
+			result.data = minCastData;
+			result.bodyResult.id = minBodyId;
+		}
 	}
 
-	// TODO: implement checks against the tiles
-	/*result = checkAxisBoxLineCast(testBox, p0, p1);
-	if (result.intersection && result.t < minResult.t)
-		minResult = result;*/
+	// check against tiles:
+	{
+		sf::Vector2i tile;
+		castData = checkTilesLineCast(p0, p1, tile);
+		if (castData.t < minCastData.t && castData.intersected()) {
+			result.type = LineCastResult::Tile;
+			result.data = castData;
+			result.tileResult.col = tile.x, result.tileResult.row = tile.y;
+		}
 
-	minResult.p0 = p0;
-	minResult.p1 = p1;
-	debug_lineCasts.push_back(minResult);
-	return minResult;
+	}
+
+	return result;
 }
 
 CollisionResult BodySystem::checkCircleCircleCollide(const CircleBody& b1, const CircleBody& b2) {
@@ -298,14 +315,14 @@ CollisionResult BodySystem::checkCircleAxisBoxCollide(const CircleBody& b1, cons
 	return result;
 }
 
-LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const {
+LineCastData BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const {
 	// do a bunch of projections to find nearest point on line to circle
 	Vector2f u = p1 - p0;
 	Vector2f v = body.getPosition() - p0;
 	Vector2f w = u * (Vec2::dot(u, v) / Vec2::dot(u, u));
 	Vector2f o = v - w;
 
-	LineCastResult result;
+	LineCastData result;
 	result.p0 = p0, result.p1 = p1;
 
 	// check radius to see if intersecting
@@ -313,13 +330,12 @@ LineCastResult BodySystem::checkCircleLineCast(const CircleBody& body, Vector2f 
 		float d_mag = sqrt(body.radius * body.radius - Vec2::dot(o, o));
 		Vector2f i = w - Vec2::norm(u) * d_mag;
 		float t = Vec2::dot(i, u) / Vec2::dot(u, u);
-		result.intersection = 0.f <= t && t <= 1.f;
 		result.t = t;
 		result.point = i + p0;
 		result.normal = result.point - body.getPosition();
 	}
 	else {
-		result.intersection = false;
+		result.t = NO_INTERSECT;
 	}
 	return result;
 }
@@ -333,7 +349,7 @@ static float lineCast_solveAxisBoxSide(float r1, float r2, float s1, float a, fl
 	return (a < s2 && s2 < b) ? t : -1.f;
 }
 
-LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const {
+LineCastData BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const {
 	// parameter which we will solve for against every plane of the axis box
 	float tmin = 2.f; // the maximum value we care about is 1 so this is fine
 	float t;
@@ -350,36 +366,89 @@ LineCastResult BodySystem::checkAxisBoxLineCast(const AxisBoxBody& body, Vector2
 	t = lineCast_solveAxisBoxSide(r.y, r.x, bottom, left, right);
 	tmin = (t > 0.f && t < tmin) ? t : tmin;
 
-	LineCastResult result;
+	LineCastData result;
 	result.p0 = p0, result.p1 = p1;
 
 	if (tmin > 0.f && tmin < 1.f) {
-		result.intersection = true;
 		result.point = p0 + r * tmin;
 		result.t = tmin;
 		// todo: find least dumb way to get normal (could do it w/ branch hell, but nah)
 	}
 	else {
-		result.intersection = false;
+		result.t = NO_INTERSECT;
 	}
 
 	return result;
 }
 
-// desc: controls the movement for all objects on the board'
-// consider moving this out of BodySystem (probably belongs in the update loop of a game wrapper)
-void BodySystem::moveObjects(Tank& player1, Tank& player2, float dt) {
-	using sf::Keyboard;
-	/* PLAYER 1 */
-	player1.setForward(Keyboard::isKeyPressed(Keyboard::W)); // note: the boolean gets casted to a float as 0f or 1f
-	player1.setBack(Keyboard::isKeyPressed(Keyboard::S));
-	player1.setLeft(Keyboard::isKeyPressed(Keyboard::A));
-	player1.setRight(Keyboard::isKeyPressed(Keyboard::D));
-	player1.update(dt);
-	/* PLAYER 2*/
-	player2.setForward(Keyboard::isKeyPressed(Keyboard::Up)); // note: the boolean gets casted to a float as 0f or 1f
-	player2.setBack(Keyboard::isKeyPressed(Keyboard::Down));
-	player2.setLeft(Keyboard::isKeyPressed(Keyboard::Left));
-	player2.setRight(Keyboard::isKeyPressed(Keyboard::Right));
-	player2.update(dt);
+// implements DDA algorithm: https://www.youtube.com/watch?v=NbSee-XM7WA&ab_channel=javidx9
+// note: last argument is an out param to get the tile hit (garbage if linecastdata is non intersecting)
+LineCastData BodySystem::checkTilesLineCast(Vector2f p0, Vector2f p1, Vector2i& posT) const {
+	LineCastData result;
+	result.p0 = p0, result.p1 = p1;
+	
+	Vector2f r = p1 - p0;
+	float m = Vec2::mag(r);
+	
+	Vector2u sizeG = mapRef.mapSize(); // tile position, direction of tile change (per axis given direction r)
+	Vector2f sizeT = mapRef.tileSize();
+	posT.x = (int)(p0.x / sizeT.x);
+	posT.y = (int)(p0.y / sizeT.y);
+	Vector2i stepT;
+	stepT.x = (r.x >= 0.f) ? 1 : -1;
+	stepT.y = (r.y >= 0.f) ? 1 : -1;
+
+	Vector2f ds; // change in length w/ respect to each axis
+	ds.x = ((r.x == 0.f) ? std::numeric_limits<float>::max() : sqrt(1 + r.y / r.x * r.y / r.x)) / m;
+	ds.y = ((r.y == 0.f) ? std::numeric_limits<float>::max() : sqrt(1 + r.x / r.y * r.x / r.y)) / m;
+	Vector2f s = Vec2::Zero; // traversed length, w/ respect to each axis
+	float sLast = 0;
+	// get initial traversals (to next tiles)
+	if (stepT.x > 0) {
+		s.x = ds.x * ((posT.x + 1) * sizeT.x - p0.x);
+	}
+	else {
+		s.x = ds.x * (p0.x - posT.x * sizeT.x);
+	}
+	if (stepT.y > 0) {
+		s.y = ds.y * ((posT.y + 1) * sizeT.y - p0.y);
+	}
+	else {
+		s.y = ds.y * (p0.y - posT.y * sizeT.y);
+	}
+	
+
+	Vector2f stepNorm;
+	bool inWall = false;
+	while (sLast <= 1 && !inWall) {
+		std::cout << "col: " << posT.x << ", row: " << posT.y << '\n';
+		if (s.x < s.y) {
+			posT.x += stepT.x;
+			sLast = s.x;
+			s.x += ds.x * sizeT.x;
+			stepNorm = Vector2f((float)-stepT.x, 0);
+		}
+		else {
+			posT.y += stepT.y;
+			sLast = s.y;
+			s.y += ds.y * sizeT.y;
+			stepNorm = Vector2f(0, (float)-stepT.y);
+		}
+		if (posT.x < 0 || posT.x >= sizeG.x || posT.y < 0 || posT.y > sizeG.y)
+			continue;
+		if (sLast <= 1 && mapRef.getTile(posT.x, posT.y).isWall()) {
+			inWall = true;
+		}
+	}
+
+	if (inWall) {
+		result.t = sLast;
+		result.normal = stepNorm;
+		result.point = result.t * r + p0;
+	}
+	else {
+		result.t = NO_INTERSECT;
+	}
+
+	return result;
 }

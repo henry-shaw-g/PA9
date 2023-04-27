@@ -1,9 +1,8 @@
 /*
 	file: BodySystem.h
 	desc: 
-		- class for managing bodies in a scene
-		- might need to make a spatial query data structure if we take the bullet hell route
-		- body oddy oddy oddy
+		- handles managing bodies and collisions
+		- needs dependency injection for the tile system
 */
 #pragma once
 
@@ -17,14 +16,9 @@
 #include "Body.h"
 #include "CircleBody.h"
 #include "AxisBoxBody.h"
-#include "../Tank.h"
-
-class KinematicsTests; // forward declare for the testing class
 
 class BodySystem {
 public:
-	friend KinematicsTests;
-
 	// ctor:
 	BodySystem(Map& systemMap);
 
@@ -50,9 +44,6 @@ public:
 	// desc: draw linecast intersections for debugging
 	void debug_drawLineCasts(sf::RenderTarget& renderTarget);
 
-	// desc: controlls the movement for all objects on the board
-	void moveObjects(Tank& player1, Tank& player2, float dt);
-
 private:
 	// desc: update the movement of bodies (move their positions according to the velocities & timesteps)
 	//	- using the 'integrate' convention since this is like a numerical integration of position
@@ -75,18 +66,23 @@ private:
 	CollisionResult checkCircleAxisBoxCollide(const CircleBody& b1, const AxisBoxBody& b2);
 
 	// desc: get line cast result on a circle:
-	LineCastResult checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const;
+	LineCastData checkCircleLineCast(const CircleBody& body, Vector2f p0, Vector2f p1) const;
 	
-	// desc: get line cast result on an AABB:
-	LineCastResult checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const;
+	// desc: get line cast result through tiles:
+	LineCastData checkTilesLineCast(Vector2f p0, Vector2f p1, Vector2i& tilePos) const;
 
+	// desc: get line cast result on an AABB:
+	LineCastData checkAxisBoxLineCast(const AxisBoxBody& body, Vector2f p0, Vector2f p1) const;
+
+	// desc: utility to produce session unique ids for body
 	int generateBodyId();
 
+	// desc: temp procedure to prevent adding duplicate bodies
 	bool invalidBodyIndex(int index);
 
 	Map& mapRef; // aggregation reference to the tiles for the game (the Tiles must outlive lifetime of BodySystem)
 	std::vector<Body*> dynamicBodies; // this system is very unsafe
 	std::vector<CollisionResult> debug_collisions;
-	std::vector<LineCastResult> debug_lineCasts;
+	std::vector<LineCastData> debug_lineCasts;
 	int idRegister; // counter which we will use to assign 'ids' to the bodies (not, consider -1 invalid / unregistered)
 };
