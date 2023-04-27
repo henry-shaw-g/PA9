@@ -30,7 +30,7 @@ public:
 
 	Type type = None;
 	union {
-		HitBodyEvent hitBody;
+		HitBodyEvent hitBody {};
 	};
 };
 
