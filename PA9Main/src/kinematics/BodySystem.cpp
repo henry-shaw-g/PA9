@@ -182,6 +182,7 @@ void BodySystem::removeBody(Body& body)
 	// to keep the bodies vector contiguous, am swapping the last element with whatever we remove
 	// then popping the back
 	dynamicBodies[index] = dynamicBodies.back(); 
+	dynamicBodies[index]->setIndex(index);
 	dynamicBodies.pop_back();
 	
 	// mark the body as not being in a list just in case
