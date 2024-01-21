@@ -66,14 +66,16 @@ const sf::Font& ResourceManager::getFontRef(const string& id) const
 
 // DO ALL THE RESOURCE LOADING CALLS HERE
 bool ResourceManager::doLoad() {
+	std::string assets_path = TANK_GAME_ASSETS_PATH;
+
 	// load textures
-	loadTexture("smiley_face_0", "assets/smiley_face_0.png");
-	loadTexture("redTank", "assets/Red Tank.png");
-	loadTexture("blueTank", "assets/Blue Tank.png");
-	loadTexture("bullet", "assets/Bullet.png");
+	loadTexture("smiley_face_0", assets_path + "/smiley_face_0.png");
+	loadTexture("redTank", assets_path + "/Red Tank.png");
+	loadTexture("blueTank", assets_path + "/Blue Tank.png");
+	loadTexture("bullet", assets_path + "/Bullet.png");
 
 	// load font(s?)
-	loadFont("freecam_font", "assets/fonts/freecam v2.ttf"); // TODO: GET BETTER FONT
+	loadFont("freecam_font", assets_path + "/fonts/freecam v2.ttf"); // TODO: GET BETTER FONT
 	return true;
 }
 

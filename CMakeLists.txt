@@ -1,5 +1,15 @@
+# note, this will not support multiple-target building
 cmake_minimum_required(VERSION 3.28)
 project(TankGamePA9)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_EXPORT_COMPILE_COMMANDS True)
+
+# config
+option(TANK_GAME_DEBUG_BUILD "debug build" True)
+set(TANK_GAME_ASSETS_PATH_DEBUG "\"game/assets\"")
+set (TANK_GAME_ASSETS_PATH_RELEASE "")
 
 # dependencies
 find_package(SFML 2.5 COMPONENTS audio graphics window system REQUIRED)
@@ -25,5 +35,9 @@ add_executable(TankGame
 # libraries
 target_link_libraries(TankGame PRIVATE sfml-system sfml-window sfml-graphics sfml-audio)
 
-# compiler flags
-target_compile_features(TankGame PUBLIC cxx_std_17)
+# ...
+if (TANK_GAME_DEBUG_BUILD)
+    add_compile_definitions(TANK_GAME_ASSETS_PATH=${TANK_GAME_ASSETS_PATH_DEBUG})
+elseif()
+    add_compile_definitions(TANK_GAME_ASSETS_PATH=${TANK_GAME_ASSETS_PATH_RELEASE})
+endif()

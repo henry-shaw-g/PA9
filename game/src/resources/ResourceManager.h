@@ -13,6 +13,12 @@
 #include <unordered_map> // hashmap
 
 #include "SFML/Graphics.hpp" // texture, font
+
+// injected defintions:
+#ifndef TANK_GAME_ASSETS_PATH
+	#define TANK_GAME_ASSETS_PATH "."
+#endif
+
 class ResourceManager {
 public:
 	// desc: statically loads the resource manager
